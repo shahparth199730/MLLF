@@ -128,8 +128,6 @@ printf("Hyperiod = %d \n",H);
 //FINDING Schedule length
 //First in-phase time + HyperPeriod
 
-int inPhase;
-
 int  ** inPhase = calloc(sizeof(*array), Periodic_ROW);
 for(i=0;i<Periodic_ROW;i++)
 {
