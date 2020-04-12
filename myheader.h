@@ -28,5 +28,4 @@ int calcHyperPeriod(struct periodicTask*,int);
 void calculateSlack(struct periodicTask*,int,int);
 void buildMinHeap(struct slack [],int);
 void minHeapify(struct slack [],int ,int );
-
 #endif
