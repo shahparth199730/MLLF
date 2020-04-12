@@ -25,7 +25,6 @@ int readFile(FILE**);
 struct periodicTask* readPeriodicJob(FILE*,int);
 void checkFeas(struct periodicTask*,int);
 int calcHyperPeriod(struct periodicTask*,int);
-int calcFrameSize(struct periodicTask*,int,int);
 void calculateSlack(struct periodicTask*,int,int);
 void buildMinHeap(struct slack [],int);
 void minHeapify(struct slack [],int ,int );
