@@ -51,7 +51,7 @@ int gcd(int a,int b) {
   else 	       return gcd(a,b-a);
 }
 
-int calcHyperPeriod(struct periodicTask *t,int n){
+int calcHyperPeriod(struct periodicTask *t,int n){ 
   int hcf,lcm,a,b;
   a = t[0].p;
   b = t[1].p;
@@ -70,15 +70,15 @@ return lcm;
 
 void calculateSlack(struct periodicTask* t,int n,int timer){
   int i;
-  struct slack* s=(struct slack*)calloc(n,sizeof(struct slack));
-  for(i=0;i<n;i++){
+  struct slack* s=(struct slack*)calloc(n,sizeof(struct slack));  
+  for(i=0;i<n;i++){                           //calculate slack for each task
     s[i].val = t[i].D-timer-t[i].c;
     s[i].id = t[i].id;
   }
-  buildMinHeap(s,n);
+  buildMinHeap(s,n);                         //create min heap on slack
   printf("\nJob with least slack is:\n");
   for(i=0;i<n;i++)
-    if(t[i].id== s[0].id){
+    if(t[i].id== s[0].id){                     //display task parameters with least slack
 	printf("slack=%.1f phase=%d period=%d deadline=%d execution=%.1f\n",s[0].val,t[i].phase,t[i].p,t[i].D,t[i].c);
         break;
     }
