@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-//#include<limits.h>
 
 #define Periodic_COL 4
 
@@ -131,17 +130,17 @@ printf("Hyperiod = %d \n",H);
 
 int inPhase;
 
-int  ** array = calloc(sizeof(*array), Periodic_ROW);
+int  ** inPhase = calloc(sizeof(*array), Periodic_ROW);
 for(i=0;i<Periodic_ROW;i++)
 {
 int n_jobs = H/period[i];
-array[i] = calloc(sizeof(**array), n_jobs ); // No. of Jobs in each tasks
+inPhase[i] = calloc(sizeof(**inPhase), n_jobs ); // No. of Jobs in each tasks
 printf("No of Jobs in Task %dth Task = %d \n",(i+1),n_jobs); 
-array[i][0] = phase[i];
+inPhase[i][0] = phase[i];
 for(j=1;j<=n_jobs;j++)
 {
-array[i][j] = array[i][j-1] + period[i];
-printf("%d\t",array[i][j-1]);
+inPhase[i][j] = inPhase[i][j-1] + period[i];
+printf("%d\t",inPhase[i][j-1]);
 }
 printf("\n");
 
