@@ -38,6 +38,7 @@ void Scheduler(char *filename){
   }
   if(utilization>1.0){
     printf("utilization:%f so not scheduleable.\n",utilization);
+    return;
   }
     hp=HyperPeriod(t.p,count);
     printf("hp is: %f\n",hp);
