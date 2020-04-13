@@ -1,7 +1,7 @@
 
 #include"HyperPeriod.c"
 #include"Inphase.c"
-void Scheduler(char *filename){
+void Handler(char *filename){
   /* filename parameter contains name of file taken from commandline */
   FILE *fp1 = fopen( filename, "r" );
   FILE *fp2 = fopen( filename, "r" );
