@@ -1,4 +1,4 @@
-#include"myheader.h"
+#include"scheduler.h"
 
 int readFile(FILE **f){
  int i,num=0;
@@ -15,58 +15,10 @@ int readFile(FILE **f){
 return num;
 }
 
-struct periodicTask* readPeriodicJob(FILE* f,int n){
- struct periodicTask* per_tsk=(struct periodicTask*)calloc(n,sizeof(struct periodicTask));
- int i;
- printf("\n***************PERIODIC TASK SET*************************\n");
-  if(per_tsk==NULL){
-	printf("Memory not allocated");
-	exit(0);
-  }
-  for (i = 0; i < n; i++) {
-     fscanf(f, "%d %d %f", &per_tsk[i].phase,&per_tsk[i].p,&per_tsk[i].c);
-     per_tsk[i].id=i;
-     per_tsk[i].D=per_tsk[i].p;
-     printf("%d %.1f %d\n",per_tsk[i].p,per_tsk[i].c,per_tsk[i].D);
-  }
-  fclose(f);
- return per_tsk;
-}
 
-void checkFeas(struct periodicTask *t,int n){
-  float u=0;
-  int i;
-  for(i=0;i<n;i++)
-    u+=t[i].c/(t[i].p<t[i].D?t[i].p:t[i].D);
-  if(u>1){
-     printf("\nUnfortunately...Task set is un-schedulable\n"); 
-     exit(0);
-  }
-  printf("\nCongratulations!!! Task set is schedulable\n");
-}
 
-int gcd(int a,int b) {
-  if(a == b)     return a;
-  else if(a>b) return gcd(a-b,b)	;
-  else 	       return gcd(a,b-a);
-}
 
-int calcHyperPeriod(struct periodicTask *t,int n){ 
-  int hcf,lcm,a,b;
-  a = t[0].p;
-  b = t[1].p;
-  hcf = gcd(a,b);
-  lcm = (a*b)/hcf;
- // printf("t=%ld t[0]=%ld\n",sizeof(*t),sizeof(t[0]));
-  for(int i=2;i<n;i++){
-    a = lcm;
-    b = t[i].p;
-    hcf = gcd(a,b);
-    lcm = (a*b)/hcf;
-  }
-  printf("Hyperperiod=%d\n",lcm);
-return lcm;
-}
+
 
 void calculateSlack(struct periodicTask* t,int n,int timer){
   int i;

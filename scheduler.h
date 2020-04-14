@@ -22,10 +22,10 @@ struct slack{
 };
 
 int readFile(FILE**);
-struct periodicTask* readPeriodicJob(FILE*,int);
-void checkFeas(struct periodicTask*,int);
+struct periodicTask* readPeriodicTaskSet(FILE*,int);
+bool checkFeasibility(struct periodicTask *t,int n);
 int calcHyperPeriod(struct periodicTask*,int);
-void calculateSlack(struct periodicTask*,int,int);
-void buildMinHeap(struct slack [],int);
-void minHeapify(struct slack [],int ,int );
+// void calculateSlack(struct periodicTask*,int,int);
+// void buildMinHeap(struct slack [],int);
+// void minHeapify(struct slack [],int ,int );
 #endif
