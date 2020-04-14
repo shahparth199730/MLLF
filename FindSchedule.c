@@ -87,7 +87,7 @@ int FindSchedule(struct task t,float end,int count){
   int curr_job=-1;
   int prev_job=-1;
   int id_tracker=0;
-  int *ready_queue=(int *)malloc(3*sizeof(int));
+  int *ready_queue=(int *)malloc(count*sizeof(int));
   int qend=0;
   FILE *fptr;
     fptr = fopen("periodicSchedule.txt", "w");
@@ -96,7 +96,7 @@ int FindSchedule(struct task t,float end,int count){
       printf("Could not open file");
       return 0;
   }
-  while(counter<end/3&&id_tracker<k){
+  while(counter<end&&id_tracker<k){
     //int count=0;
     for(int i=id_tracker;job[i].arrival<=counter;i++){
       if(id_tracker>=k) break;
