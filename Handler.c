@@ -1,6 +1,7 @@
 
 #include"HyperPeriod.c"
 #include"Inphase.c"
+#include"FindSchedule.c"
 void Handler(char *filename){
   /* filename parameter contains name of file taken from commandline */
   FILE *fp1 = fopen( filename, "r" );
@@ -27,11 +28,21 @@ void Handler(char *filename){
   t.d=(float *)malloc(count*sizeof(float));
   t.c=(float *)malloc(count*sizeof(float));
   /* Reading the taskset from the given file.*/
+  FILE *fp3 = fopen("UpdatedTaskSet.txt","w");
   while (fscanf(fp2, "%f,%f,%f,%f\n",&t.phase[i],&t.p[i], &t.c[i], &t.d[i])==4) {
+
+
+        float random=rand()%5;
+        float value=((5+random)/10);
+        //printf("\n%f value\n",value);
+        t.c[i]=t.c[i]*value;
+
         printf("%f,%f,%.1f,%f\n", t.phase[i],t.p[i], t.c[i], t.d[i]);
+        fprintf(fp3,"%.2f,%.2f,%.2f,%.2f\n", t.phase[i],t.p[i], t.c[i], t.d[i]);
         i++;
   }
   fclose( fp2 );
+  fclose( fp3 );
   /*Finding the utilization */
   for(int i=0;i<count;i++){
       utilization+=(t.c[i]/t.p[i]);
@@ -57,6 +68,12 @@ void Handler(char *filename){
       end=(fip+hp)>(3*hp)?3*hp:fip+hp;
     }
     printf("Schedule will be from 0 to %f\n",end);
+    if(FindSchedule(t,end,count)){
+      printf("Done.\n");
+    }
+    else{
+      printf("Not Done.\n");
+    }
      free(t.phase);
      free(t.p);
      free(t.d);
