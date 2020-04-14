@@ -137,7 +137,7 @@ int FindSchedule(struct task t,float end,int count){
     timer=arr[1];
     if(prev_job!=-1&&curr_job!=prev_job&&job[prev_job].visit!=1){
       preemption++;
-      //counter+=0.2;
+      counter+=0.2;
     }
     float temp_timer1=counter+job[curr_job].execution;
     float temp_timer2=job[id_tracker].arrival;
@@ -183,7 +183,7 @@ int FindSchedule(struct task t,float end,int count){
     counter+=(timer-counter);
     counter=(float)((int)(counter * 1000 + .5))/1000;
     timer=0;
-    //counter+=0.1;
+    counter+=0.1;
     //if(curr_job==43) break;
     // printf("Hello\n");
   //}
