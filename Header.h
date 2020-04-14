@@ -32,5 +32,5 @@ void Handler(char* );
 float HyperPeriod(float *, int );
 float Inphase(float *,float *,int,float );
 int FindSchedule(struct task,float,int);
-void Scheduler(float ,struct jobs* ,int ,int,float *,int*);
+void Scheduler(float ,struct jobs* ,int,float *,struct laxity*);
 void TieBreaker(struct jobs *,struct laxity *,int ,int,float*,int*);

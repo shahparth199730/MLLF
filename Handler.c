@@ -35,7 +35,7 @@ void Handler(char *filename){
         float random=rand()%5;
         float value=((5+random)/10);
         //printf("\n%f value\n",value);
-        t.c[i]=t.c[i]*value;
+        //t.c[i]=t.c[i]*value;
 
         printf("%f,%f,%.1f,%f\n", t.phase[i],t.p[i], t.c[i], t.d[i]);
         fprintf(fp3,"%.2f,%.2f,%.2f,%.2f\n", t.phase[i],t.p[i], t.c[i], t.d[i]);
