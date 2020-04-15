@@ -40,7 +40,6 @@ bool CreateSchedule(char* fileName)
 
 struct task* InitializeTaskSet(char *fileName,int* count)
 {
-    bool res=false;
     FILE *fp;
     struct task *taskSet;
     fp=fopen(fileName,"r");
@@ -55,7 +54,6 @@ struct task* InitializeTaskSet(char *fileName,int* count)
             (*count)++;
             taskSet=ReAllocateTaskSet(taskSet,*count);
         }   
-        res=true;
     }
     else
       printf("Could not open the given file");
