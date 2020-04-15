@@ -5,27 +5,34 @@
 #include<stdbool.h>
 #include<string.h>
 #include<math.h>
+#include<stdlib.h>
+#include<time.h>
+#define MAX 1000
 
-struct periodicTask{            		 //task definition
-	int phase,p,D,id;           		 //following standard naming convention  
-	float c;                 		//p=period,D=realtive deadline,c=execution time  
-};
-
-struct periodicJob{                         	//job definition
-  	int arr_time,deadline,id;       		//arr_time=arrival time   
-  	float wcet;
-};
-
-struct slack{
-  float val;
+/* Structure of the task used to handle the periodic taskset*/
+struct task{
   int id;
+  float phase;
+  float p;
+  float d;
+  float c;
 };
 
-int readFile(FILE**);
-struct periodicTask* readPeriodicTaskSet(FILE*,int);
-bool checkFeasibility(struct periodicTask *t,int n);
-int calcHyperPeriod(struct periodicTask*,int);
-// void calculateSlack(struct periodicTask*,int,int);
-// void buildMinHeap(struct slack [],int);
-// void minHeapify(struct slack [],int ,int );
+struct task *taskSet;
+extern int noOfTasks;
+
+void AllocateTaskSet();
+
+void ReAllocateTaskSet();
+
+bool CreateSchedule(char*);
+
+bool InitializeTaskSet(char*);
+
+float GetRandomNumber();
+
+void InitializeTask(char*);
+
+void PrintTaskSet();
+
 #endif

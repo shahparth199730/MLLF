@@ -7,76 +7,90 @@
 */
 #include"scheduler.h"
 
-int readFile(FILE **f){
- int i,num=0;
- char file_name[80],ch;
- printf("\nEnter file name: ");
- scanf("%s",file_name);
- *f = fopen(file_name, "r");
-  if (*f == NULL) { 
-	printf("Error opening file\n");
-	exit(0);
-  }
- while((ch=fgetc(*f))!='\n')
-    num = num*10 + (ch-48);
-
-printf("num is %d",num);
-return num;
+int noOfTasks=0;
+void AllocateTaskSet()
+{
+  taskSet=(struct task*)malloc(sizeof(struct task));
 }
 
-
-///read the periodic taskset from file///
-struct periodicTask* readPeriodicTaskSet(FILE* f,int n){
- struct periodicTask* per_tsk=(struct periodicTask*)calloc(n,sizeof(struct periodicTask));
- int i;
- printf("\n***************PERIODIC TASK SET*************************\n");
-  if(per_tsk==NULL){
-	printf("Memory not allocated");
-	exit(0);
-  }
-  for (i = 0; i < n; i++) {
-     fscanf(f, "%d %d %f", &per_tsk[i].phase,&per_tsk[i].p,&per_tsk[i].c);
-     per_tsk[i].id=i;
-     per_tsk[i].D=per_tsk[i].p;
-     printf("%d %.1f %d\n",per_tsk[i].p,per_tsk[i].c,per_tsk[i].D);
-  }
-  fclose(f);
- return per_tsk;
+void ReAllocateTaskSet()
+{
+  taskSet=(struct task*) realloc(taskSet,noOfTasks*sizeof(struct task)+sizeof(struct task));
 }
 
-
-int gcd(int a,int b) {
-  if(a == b)     return a;
-  else if(a>b) return gcd(a-b,b)	;
-  else 	       return gcd(a,b-a);
+bool CreateSchedule(char* fileName)
+{
+  //read the taskset from the file
+    bool isTaskSetInitialized,res=false;
+    isTaskSetInitialized=InitializeTaskSet(fileName);
+    if(isTaskSetInitialized)
+    {
+      //TODO: set the res to true of everything is correct
+      res=true;
+    }
+    return res; 
 }
 
-int calcHyperPeriod(struct periodicTask *t,int n){ 
-  int hcf,lcm,a,b;
-  a = t[0].p;
-  b = t[1].p;
-  hcf = gcd(a,b);
-  lcm = (a*b)/hcf;
- // printf("t=%ld t[0]=%ld\n",sizeof(*t),sizeof(t[0]));
-  for(int i=2;i<n;i++){
-    a = lcm;
-    b = t[i].p;
-    hcf = gcd(a,b);
-    lcm = (a*b)/hcf;
-  }
-  printf("Hyperperiod=%d\n",lcm);
-return lcm;
+bool InitializeTaskSet(char *fileName)
+{
+    bool res=false;
+    FILE *fp;
+    fp=fopen(fileName,"r");
+    if(fp!=NULL)
+    {
+        char line[MAX];
+        //read input data from the file pointer, and assign it to the task;
+        AllocateTaskSet();
+        while(fgets(line,MAX,fp)!=NULL) 
+        {
+            ReAllocateTaskSet();
+            InitializeTask(line);
+        }   
+        PrintTaskSet();  
+        res=true;
+    }
+    else
+      printf("Could not open the given file");
+
+    return res;
 }
 
-bool checkFeasibility(struct periodicTask *t,int n){
-  float u=0;
-  bool res=true;
+void InitializeTask(char* line)
+{ 
+    //read each line and set the parameters for the taskset
+    char* token=strtok(line,",");
+    char *param[4];
+    int i=0;
+    while(token!=NULL)
+    {
+        param[i++]=token;
+        token=strtok(NULL,",");   
+    }
+    taskSet[noOfTasks].id=noOfTasks+1;
+    taskSet[noOfTasks].phase=atof(param[0]);
+    taskSet[noOfTasks].p=atof(param[1]);
+    taskSet[noOfTasks].c=atof(param[2]);
+    taskSet[noOfTasks].d=atof(param[3]);
+    noOfTasks++;
+}
+
+void PrintTaskSet()
+{
   int i;
-  for(i=0;i<n;i++)
-    u+=t[i].c/(t[i].p<t[i].D?t[i].p:t[i].D);
-  if(u>1){
-    res=false;
+  printf("*****************************************TASKSET****************************************\n");
+  for(i=0;i<noOfTasks;i++)
+  {
+      printf("ID:%d\tPhase:%.2f\tPeriod:%.2f\tExecution Time:%.2f\tRelative Deadline: %.2f\n",
+      taskSet[i].id,taskSet[i].phase,taskSet[i].p,taskSet[i].c,taskSet[i].d);
   }
-  return res;
+}
+
+float GetRandomNumber()
+{
+    //everytime generates a different random number within the given range
+    float randomNumber;
+    srand(time(0));
+    randomNumber=((rand()%5)+6)/10.0;
+    return randomNumber;
 }
 
