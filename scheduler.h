@@ -20,6 +20,7 @@ struct task{
 
 struct task *taskSet;
 extern int noOfTasks;
+extern float hyperperiod;
 
 void AllocateTaskSet();
 
@@ -34,5 +35,13 @@ float GetRandomNumber();
 void InitializeTask(char*);
 
 void PrintTaskSet();
+
+float gcd(float, float);
+
+float findlcm(struct task*, int);
+
+void CalculateHyperPeriod(struct task*,int);
+
+void PrintHyperPeriod();
 
 #endif
