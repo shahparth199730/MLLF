@@ -34,8 +34,6 @@ bool CreateSchedule(char* fileName)
       PrintHyperPeriod(hyperperiod);
       inPhaseTime=Inphase(taskSet, *count,hyperperiod);
       end=FindScheduleEnd(inPhaseTime,hyperperiod);
-      printf("Start: %.2f and End:%.2f\n",start,end);
-      //TODO: set the res to true of everything is correct
       res=true;
     }
     return res; 
