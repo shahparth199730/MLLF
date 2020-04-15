@@ -41,4 +41,8 @@ float CalculateHyperPeriod(struct task*,int);
 void PrintHyperPeriod(float);
 
 bool CheckTaskSetFeasibility(struct task*,int);
+
+float Inphase(struct task*,int,float);
+
+float FindScheduleEnd(float,float);
 #endif
