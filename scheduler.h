@@ -18,6 +18,15 @@ struct task{
   float c;
 };
 
+struct job
+{
+  int id[3];
+  float startTime;
+  float endTime;
+  struct task *associatedTask;
+  float absoluteDeadline;
+}
+
 struct task* AllocateTaskSet(struct task*);
 
 struct task* ReAllocateTaskSet(struct task*,int);
