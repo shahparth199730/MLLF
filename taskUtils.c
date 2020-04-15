@@ -7,57 +7,64 @@
 */
 #include"scheduler.h"
 
-int noOfTasks=0;
-float hyperperiod;
-void AllocateTaskSet()
+struct task* AllocateTaskSet(struct task* taskSet)
 {
   taskSet=(struct task*)malloc(sizeof(struct task));
+  return taskSet;
 }
 
-void ReAllocateTaskSet()
+struct task* ReAllocateTaskSet(struct task* taskSet,int noOfTasks)
 {
   taskSet=(struct task*) realloc(taskSet,noOfTasks*sizeof(struct task)+sizeof(struct task));
+  return taskSet;
 }
 
 bool CreateSchedule(char* fileName)
 {
   //read the taskset from the file
     bool res=false;
-    if(InitializeTaskSet(fileName) && CheckTaskSetFeasibility())
+    int noOfTasks=0,*count;
+    count=&noOfTasks;
+    struct task *taskSet=InitializeTaskSet(fileName,&noOfTasks);
+    float hyperperiod;
+    PrintTaskSet(taskSet,*count);
+    if(CheckTaskSetFeasibility(taskSet,noOfTasks))
     {
-      CalculateHyperPeriod(taskSet,noOfTasks);
-      PrintHyperPeriod();
+      hyperperiod=CalculateHyperPeriod(taskSet,*count);
+      PrintHyperPeriod(hyperperiod);
       //TODO: set the res to true of everything is correct
       res=true;
     }
     return res; 
 }
 
-bool InitializeTaskSet(char *fileName)
+struct task* InitializeTaskSet(char *fileName,int* count)
 {
     bool res=false;
     FILE *fp;
+    struct task *taskSet;
     fp=fopen(fileName,"r");
     if(fp!=NULL)
     {
         char line[MAX];
         //read input data from the file pointer, and assign it to the task;
-        AllocateTaskSet();
+        taskSet=AllocateTaskSet(taskSet);
         while(fgets(line,MAX,fp)!=NULL) 
         {
-            ReAllocateTaskSet();
-            InitializeTask(line);
+            taskSet=InitializeTask(taskSet,line,*count);
+            (*count)++;
+            taskSet=ReAllocateTaskSet(taskSet,*count);
         }   
-        PrintTaskSet();  
         res=true;
     }
     else
       printf("Could not open the given file");
 
-    return res;
+    fclose(fp);
+    return taskSet;
 }
 
-void InitializeTask(char* line)
+struct task* InitializeTask(struct task* taskSet,char* line,int count)
 { 
     //read each line and set the parameters for the taskset
     char* token=strtok(line,",");
@@ -68,15 +75,15 @@ void InitializeTask(char* line)
         param[i++]=token;
         token=strtok(NULL,",");   
     }
-    taskSet[noOfTasks].id=noOfTasks+1;
-    taskSet[noOfTasks].phase=atof(param[0]);
-    taskSet[noOfTasks].p=atof(param[1]);
-    taskSet[noOfTasks].c=atof(param[2]);
-    taskSet[noOfTasks].d=atof(param[3]);
-    noOfTasks++;
+    taskSet[count].id=count+1;
+    taskSet[count].phase=atof(param[0]);
+    taskSet[count].p=atof(param[1]);
+    taskSet[count].c=atof(param[2]);
+    taskSet[count].d=atof(param[3]);
+    return taskSet;
 }
 
-void PrintTaskSet()
+void PrintTaskSet(struct task *taskSet,int noOfTasks)
 {
   int i;
   printf("*****************************************TASKSET****************************************\n");
@@ -126,17 +133,19 @@ float findlcm(struct task arr[], int n)
 }
 
 
-void CalculateHyperPeriod(struct task *t,int count){
+float CalculateHyperPeriod(struct task *t,int count){
+  float hyperperiod;
   hyperperiod= findlcm(t,count);
+  return hyperperiod;
 }
 
 
-void PrintHyperPeriod()
+void PrintHyperPeriod(float hyperperiod)
 {
     printf("HyerPeriod is %.2f\n",hyperperiod);
 }
 
-bool CheckTaskSetFeasibility()
+bool CheckTaskSetFeasibility(struct task *taskSet,int noOfTasks)
 {
   int i;
   float utilization=0;

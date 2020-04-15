@@ -18,31 +18,27 @@ struct task{
   float c;
 };
 
-struct task *taskSet;
-extern int noOfTasks;
-extern float hyperperiod;
+struct task* AllocateTaskSet(struct task*);
 
-void AllocateTaskSet();
-
-void ReAllocateTaskSet();
+struct task* ReAllocateTaskSet(struct task*,int);
 
 bool CreateSchedule(char*);
 
-bool InitializeTaskSet(char*);
+struct task* InitializeTaskSet(char*,int*);
 
 float GetRandomNumber();
 
-void InitializeTask(char*);
+struct task* InitializeTask(struct task*,char*,int);
 
-void PrintTaskSet();
+void PrintTaskSet(struct task*,int);
 
 float gcd(float, float);
 
 float findlcm(struct task*, int);
 
-void CalculateHyperPeriod(struct task*,int);
+float CalculateHyperPeriod(struct task*,int);
 
-void PrintHyperPeriod();
+void PrintHyperPeriod(float);
 
-bool CheckTaskSetFeasibility();
+bool CheckTaskSetFeasibility(struct task*,int);
 #endif
