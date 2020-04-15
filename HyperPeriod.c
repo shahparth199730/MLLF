@@ -2,18 +2,15 @@
 /* gcd is helping function for finding lcm*/
 float gcd(float a, float b)
 {
-    // if (b == 0)
-    //     return a;
-    // return gcd(b, fmod(a, b));
-    if (a < b)
-        return gcd(b, a);
-
-    // base case
-    if (fabs(b) < 0.001)
-        return a;
-
-    else
-        return (gcd(b, a - floor(a / b) * b));
+    if(a < b){
+      return gcd(b, a);
+    }
+    if(fabs(b) < 0.001){
+      return a;
+    }
+    else{
+      return (gcd(b, a - floor(a / b) * b));
+    }
 }
 /* findlcm will find the lcm of all the periods and return its value.*/
 float findlcm(float arr[], int n)

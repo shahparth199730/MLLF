@@ -13,7 +13,6 @@ struct task{
 };
 /*Structure required to handle the jobs of each task*/
 struct jobs{
-  float phase;
   int job_id;
   int instance_id;
   float arrival;
@@ -32,5 +31,8 @@ void Handler(char* );
 float HyperPeriod(float *, int );
 float Inphase(float *,float *,int,float );
 int FindSchedule(struct task,float,int);
+void CreateNewJob(struct jobs*,struct task ,int *,int);
 void Scheduler(float ,struct jobs* ,int,float *,struct laxity*);
 void TieBreaker(struct jobs *,struct laxity *,int ,int,float*,int*);
+void ResponseTime(struct jobs*,struct task,FILE *,int,float);
+void WaitingTime(struct jobs*,struct task,FILE *,int,float);

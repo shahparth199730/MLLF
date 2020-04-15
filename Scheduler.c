@@ -3,6 +3,7 @@ void Scheduler(float counter,struct jobs *job,int qend,float *arr,struct laxity 
   float min_deadline=0;
   int min_id=-1;
   min_deadline=job[l[0].id].deadline;
+  printf("Job:%d,%d, with slack %f and execution:%f and deadline:%f\n",job[l[0].id].job_id,job[l[0].id].instance_id,l[0].slack,l[0].execution,job[l[0].id].deadline);
   for(int i=1;i<qend;i++){
       if(min_deadline>job[l[i].id].deadline){
         min_deadline=job[l[0].id].deadline;

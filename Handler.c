@@ -1,4 +1,3 @@
-
 #include"HyperPeriod.c"
 #include"Inphase.c"
 #include"FindSchedule.c"
@@ -30,11 +29,9 @@ void Handler(char *filename){
   /* Reading the taskset from the given file.*/
   FILE *fp3 = fopen("UpdatedTaskSet.txt","w");
   while (fscanf(fp2, "%f,%f,%f,%f\n",&t.phase[i],&t.p[i], &t.c[i], &t.d[i])==4) {
-
-
+    /*This part need to be changed. We have to do job level not task level. */
         float random=rand()%5;
         float value=((5+random)/10);
-        //printf("\n%f value\n",value);
         t.c[i]=t.c[i]*value;
 
         printf("%f,%f,%.1f,%f\n", t.phase[i],t.p[i], t.c[i], t.d[i]);
@@ -51,31 +48,31 @@ void Handler(char *filename){
     printf("utilization:%f so not scheduleable.\n",utilization);
     return;
   }
-    hp=HyperPeriod(t.p,count);
-    printf("hp is: %f\n",hp);
-    float fip=Inphase(t.phase,t.p,count,hp);
-    float end=0;
-    if(fip==0){
-      printf("All are inphase.\n");
-      end=3*hp;
-    }
-    else if(fip==-1){
-      printf("Continue with 3*hp\n");
-      end=3*hp;
-    }
-    else{
-      printf("First Inphase time is:%f\n",fip);
-      end=(fip+hp)>(3*hp)?3*hp:fip+hp;
-    }
-    printf("Schedule will be from 0 to %f\n",end);
-    if(FindSchedule(t,end,count)){
-      printf("Done.\n");
-    }
-    else{
-      printf("Not Done.\n");
-    }
-     free(t.phase);
-     free(t.p);
-     free(t.d);
-     free(t.c);
+  hp=HyperPeriod(t.p,count);
+  printf("hp is: %f\n",hp);
+  float fip=Inphase(t.phase,t.p,count,hp);
+  float end=0;
+  if(fip==0){
+    printf("All are inphase.\n");
+    end=3*hp;
+  }
+  else if(fip==-1){
+    printf("Continue with 3*hp\n");
+    end=3*hp;
+  }
+  else{
+    printf("First Inphase time is:%f\n",fip);
+    end=(fip+hp)>(3*hp)?3*hp:fip+hp;
+  }
+  printf("Schedule will be from 0 to %f\n",end);
+  if(FindSchedule(t,end,count)){
+    printf("Done.\n");
+  }
+  else{
+    printf("Not Done.\n");
+  }
+   free(t.phase);
+   free(t.p);
+   free(t.d);
+   free(t.c);
 }

@@ -1,52 +1,8 @@
 #include"Scheduler.c"
-int comparator(const void *p, const void *q)
-{
-    struct jobs* l1 = (struct jobs *)p;
-    struct jobs* r1 = (struct jobs *)q;
-    float l=l1->arrival;
-    float r=r1->arrival;
-    if(l-r>0){
-      return 1;
-    }
-    else if(l-r==0){
-      float temp1=((struct jobs *)p)->deadline;
-      float temp2=((struct jobs *)q)->deadline;
-      if(temp1<temp2){
-        return -1;
-      }
-      else{
-        return 1;
-      }
-    }
-    else{
-      return -1;
-    }
-    return -1;
-}
-int compare(const void *p, const void *q)
-{
-    struct laxity* l1 = (struct laxity *)p;
-    struct laxity* r1 = (struct laxity *)q;
-    float l=l1->slack;
-    float r=r1->slack;
-    if(l-r>0){
-      return 1;
-    }
-    else if(l-r==0){
-      float temp1=((struct laxity *)p)->execution;
-      float temp2=((struct laxity *)q)->execution;
-      if(temp1<temp2){
-        return -1;
-      }
-      else{
-        return 1;
-      }
-    }
-    else{
-      return -1;
-    }
-    return -1;
-}
+#include"CreateNewJob.c"
+#include"Comparator.c"
+#include"ResponseTime.c"
+#include"WaitingTime.c"
 int FindSchedule(struct task t,float end,int count){
   struct jobs *job;
   int total=0;
@@ -57,47 +13,49 @@ int FindSchedule(struct task t,float end,int count){
   printf("TOTAL JOBS ARE:%d\n\n",total);
   job=(struct jobs*)malloc(total*sizeof(struct jobs));
   for(int i=0;i<count;i++){
-    int n=(end-t.phase[i])/t.p[i];
-    for(int j=0;j<n;j++){
+    if(t.phase[i]==0){
       job[k].job_id=i+1;
-      job[k].instance_id=j+1;
+      job[k].instance_id=1;
       job[k].execution=t.c[i];
-      job[k].phase=t.phase[i];
       job[k].visit=0;
-      if(j==0){
-        job[k].arrival=t.phase[i];
-      }
-      else{
-        job[k].arrival=job[k-1].arrival+t.p[i];
-      }
+      job[k].arrival=t.phase[i];
       job[k].deadline=job[k].arrival+t.d[i];
       job[k].finish=0;
       printf("J%d,%d with execution:%f,arrival:%f,deadline:%f\n",job[k].job_id,job[k].instance_id,job[k].execution,job[k].arrival,job[k].deadline);
       k++;
     }
   }
-  printf("After Sorting:\n");
-  qsort(job, k, sizeof(struct jobs), comparator);
-  for(int i=0;i<k;i++){
-    printf("J%d,%d with execution:%f,arrival:%f,deadline:%f\n",job[i].job_id,job[i].instance_id,job[i].execution,job[i].arrival,job[i].deadline);
+  for(int i=0;i<count;i++){
+    if(t.phase[i]!=0){
+      job[k].job_id=i+1;
+      job[k].instance_id=1;
+      job[k].execution=t.c[i];
+      job[k].visit=0;
+      job[k].arrival=t.phase[i];
+      job[k].deadline=job[k].arrival+t.d[i];
+      job[k].finish=0;
+      printf("J%d,%d with execution:%f,arrival:%f,deadline:%f\n",job[k].job_id,job[k].instance_id,job[k].execution,job[k].arrival,job[k].deadline);
+      k++;
+    }
   }
+  struct laxity *l;
+  int *ready_queue;
+  FILE *fptr;
   int preemption=0;
   float timer=0;
   float counter=0;
   int curr_job=-1;
   int prev_job=-1;
   int id_tracker=0;
-  int *ready_queue=(int *)malloc(count*sizeof(int));
+  ready_queue=(int *)malloc(count*sizeof(int));
   int qend=0;
-  FILE *fptr;
-    fptr = fopen("periodicSchedule.txt", "w");
+  fptr = fopen("periodicSchedule.txt", "w");
   if (fptr == NULL)
   {
       printf("Could not open file");
       return 0;
   }
-  while(counter<end&&id_tracker<k){
-    //int count=0;
+  while(counter<end&&id_tracker<total||qend!=0){
     for(int i=id_tracker;job[i].arrival<=counter;i++){
       if(id_tracker>=k) break;
       ready_queue[qend++]=i;
@@ -110,12 +68,9 @@ int FindSchedule(struct task t,float end,int count){
       fprintf(fptr,"%.2f-%.2f : IDLE\n",tc,counter);
       continue;
     }
-
-    struct laxity *l;
     l=(struct laxity *)malloc(qend*sizeof(struct laxity));
     int ik=0;
     for(int i=0;i<qend;i++){
-      //printf("l[ik]:%d",ready_queue[i]);
       if(job[ready_queue[i]].visit!=1){
         l[ik].slack=job[ready_queue[i]].deadline-counter-job[ready_queue[i]].execution;
         l[ik].id=ready_queue[i];
@@ -124,14 +79,16 @@ int FindSchedule(struct task t,float end,int count){
       }
     }
     if(qend>1)
-    qsort(l, qend, sizeof(struct laxity), compare);
-
-
-    float arr[3];
+    qsort(l, qend, sizeof(struct laxity), Comparator);
+    if(l[0].slack<0){
+      printf("J%d,%d misses the deadline.\n",job[l[0].id].job_id,job[l[0].id].instance_id);
+      return 0;
+    }
+    float arr[2];
     arr[0]=curr_job;
     arr[1]=0;
-    arr[3]=total;
     prev_job=curr_job;
+    counter+=0.1;
     Scheduler(counter,job,qend,arr,l);
     curr_job=arr[0];
     timer=arr[1];
@@ -157,25 +114,22 @@ int FindSchedule(struct task t,float end,int count){
       job[curr_job].visit=1;
       job[curr_job].execution=0;
       job[curr_job].finish=timer;
-      // for(int i=qstart;i<qend;i++){
-      //   printf("BEFORE JOB id's are:%d\n",ready_queue[i]);
-      // }
-      //int  move_id=-1;
       for(int i=0;i<qend-1;i++){
         if(ready_queue[i]==curr_job){
           ready_queue[i]=ready_queue[i+1];
           ready_queue[i+1]=curr_job;
-          //printf("ON JOB id's are:%d\n",ready_queue[i]);
-          //break;
         }
       }
-      // for(int i=qend-1;i>=moveid;i--){
-      //   reeady
-      // }
       qend--;
-      // for(int i=qstart;i<qend;i++){
-      //   printf("JOB id's are:%d\n",ready_queue[i]);
-      // }
+        if(id_tracker<total){
+        struct jobs *newjob = (struct jobs *)realloc(job, sizeof(struct jobs)*(k+1));
+        if(newjob==NULL){
+          printf("Memory error");
+          return 0;
+        }
+        job=newjob;
+      CreateNewJob(job,t,&k,curr_job);
+    }
     }
     else{
       job[curr_job].execution-=(timer-counter);
@@ -183,19 +137,18 @@ int FindSchedule(struct task t,float end,int count){
     counter+=(timer-counter);
     counter=(float)((int)(counter * 1000 + .5))/1000;
     timer=0;
-    counter+=0.1;
-    //if(curr_job==43) break;
-    // printf("Hello\n");
-  //}
   }
   if(counter!=end){
     fprintf(fptr,"%.2f-%.2f : IDLE\n",counter,end);
   }
+  fprintf(fptr,"\n");
   fprintf(fptr,"Total preemptions are:%d\n",preemption);
-  for(int i=0;i<k;i++){
-    float resposne=job[i].finish-job[i].arrival;
-    printf("Respone time for job J%d,%d having arrival:%f and finishing:%f :: %f\n",job[i].job_id,job[i].instance_id,job[i].arrival,job[i].finish,resposne);
-  }
+  fprintf(fptr,"\n");
+  ResponseTime(job,t,fptr,count,end);
+  WaitingTime(job,t,fptr,count,end);
   fclose(fptr);
+  free(job);
+  free(ready_queue);
+  free(l);
   return 1;
 }

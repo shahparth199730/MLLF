@@ -53,6 +53,7 @@ float Inphase(float* phase,float* period, int count,float hp){
           break;
         }
     }
-
+    free(x);
+    free(array);
   return inPhase;
 }
