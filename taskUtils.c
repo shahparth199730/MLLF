@@ -22,14 +22,12 @@ void ReAllocateTaskSet()
 bool CreateSchedule(char* fileName)
 {
   //read the taskset from the file
-    bool isTaskSetInitialized,res=false;
-    isTaskSetInitialized=InitializeTaskSet(fileName);
-    if(isTaskSetInitialized)
+    bool res=false;
+    if(InitializeTaskSet(fileName) && CheckTaskSetFeasibility())
     {
       CalculateHyperPeriod(taskSet,noOfTasks);
       PrintHyperPeriod();
       //TODO: set the res to true of everything is correct
-
       res=true;
     }
     return res; 
@@ -137,3 +135,14 @@ void PrintHyperPeriod()
 {
     printf("HyerPeriod is %.2f\n",hyperperiod);
 }
+
+bool CheckTaskSetFeasibility()
+{
+  int i;
+  float utilization=0;
+  for(int i=0;i<noOfTasks;i++){
+      utilization+=(taskSet[i].c/taskSet[i].p);
+  }
+  return (utilization<=1);
+}
+

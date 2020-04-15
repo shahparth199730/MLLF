@@ -44,4 +44,5 @@ void CalculateHyperPeriod(struct task*,int);
 
 void PrintHyperPeriod();
 
+bool CheckTaskSetFeasibility();
 #endif
