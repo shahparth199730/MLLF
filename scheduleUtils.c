@@ -112,13 +112,20 @@ struct job* AddOverheadJob(struct job* schedule,int noOfJobsInSchedule,float cur
 struct task* FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float *current,struct task *taskSet,float *execArr)
 {
     //find latency of all the tasks available
-    float *laxityArr=NULL;
+    float *laxityArr=NULL,minLaxity;
     struct task *nextTask=(struct task *)malloc(sizeof(struct task));
-    int i;
+    int *minLaxityTaskArr=NULL,minLaxityTaskCount=0,i;
     laxityArr=FindLaxityOfAvailableTasks(activeTasks,activeTaskCount,*current,execArr);
+    minLaxity=FindMinLaxity(laxityArr,activeTaskCount);
     for(i=0;i<activeTaskCount;i++)
     {
-        printf("Task ID:%d Laxity:%.2f\n",activeTasks[i],laxityArr[i]);
+        if(laxityArr[i]==minLaxity)
+        {
+            minLaxityTaskArr=(int*)realloc(minLaxityTaskArr,minLaxityTaskCount*sizeof(int)+sizeof(int));
+            //adding the task id to the array
+            minLaxityTaskArr[minLaxityTaskCount]=activeTasks[i];
+            minLaxityTaskCount++;
+        }
     }
     return nextTask;
 }
@@ -126,8 +133,7 @@ struct task* FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,floa
 float* FindLaxityOfAvailableTasks(int *activeTasks,int activeTaskCount,float current,float *execArr)
 {
     int i;
-    float *activeTasksLaxity=(float*)malloc(activeTaskCount*sizeof(float)),minLaxity;
-    int *minLaxityTaskArr=NULL,minLaxityTaskCount=0;
+    float *activeTasksLaxity=(float*)malloc(activeTaskCount*sizeof(float));   
 
     for(i=0;i<activeTaskCount;i++)
     {
@@ -135,17 +141,6 @@ float* FindLaxityOfAvailableTasks(int *activeTasks,int activeTaskCount,float cur
         float laxity;
         laxity=FindLaxity(activeTasks[i],execArr,current);
         activeTasksLaxity[i]=laxity;
-    }
-    minLaxity=FindMinLaxity(activeTasksLaxity,activeTaskCount);
-    for(i=0;i<activeTaskCount;i++)
-    {
-        if(activeTasksLaxity[i]==minLaxity)
-        {
-            minLaxityTaskArr=(int*)realloc(minLaxityTaskArr,minLaxityTaskCount*sizeof(int)+sizeof(int));
-            //adding the task id to the array
-            minLaxityTaskArr[minLaxityTaskCount]=activeTasks[i];
-            minLaxityTaskCount++;
-        }
     }
     return activeTasksLaxity;
 }
