@@ -77,4 +77,10 @@ void InitializeExecutionTimeArr(float*,struct task*,int);
 struct job* AddOverheadJob(struct job*,int,float,int,bool);
 
 struct job* AddOverheadToSchedule(struct job*,int*,float*,int*,bool);
+
+struct task* FindNextTaskToBeScheduled(int *,int ,float *,struct task *,float *);
+
+float* FindLaxityOfAvailableTasks(int *,int ,float ,float *);
+
+float FindLaxity(int,float*,float);
 #endif
