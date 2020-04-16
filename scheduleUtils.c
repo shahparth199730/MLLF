@@ -6,8 +6,7 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
     float *execArr,current=0.0,*cur,*latencyOfActiveTasks;
     cur=&current;
     struct job *schedule=NULL;
-    struct task *nextTask,*previousTask;
-    int *activeTaskCount,count=0,i,*activeTasks,*noOfJobsInSchedule,jobCo=0,*noOfOverheads,overheadCount=0;
+    int *activeTaskCount,count=0,i,*activeTasks,*noOfJobsInSchedule,jobCo=0,*noOfOverheads,overheadCount=0,prevTaskID=0,nextTaskID;
     noOfOverheads=&overheadCount;
     activeTaskCount=&count;
     noOfJobsInSchedule=&jobCo;
@@ -20,8 +19,11 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         schedule=AddOverheadToSchedule(schedule,noOfJobsInSchedule,cur,noOfOverheads,true);
         //among the available tasks, look for the tasks available
         activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,*cur,activeTaskCount);
-        nextTask=FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr);
+        nextTaskID=FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr,prevTaskID);
         current+=end;
+        //TODO: set prev task id nd next task id
+        //TODO: add to the schedule
+        //TODO: set next to prev
        // nextTask=FindNextTaskToBeScheduled(activeTasks,activeTaskCount,current,taskSet,execArr);
         //previousTask=nextTask;
     }
@@ -109,11 +111,11 @@ struct job* AddOverheadJob(struct job* schedule,int noOfJobsInSchedule,float cur
     return schedule;
 }
 
-struct task* FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float *current,struct task *taskSet,float *execArr)
+int FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float *current,struct task *taskSet,float *execArr,int prevTask)
 {
     //find latency of all the tasks available
     float *laxityArr=NULL,minLaxity;
-    struct task *nextTask=(struct task *)malloc(sizeof(struct task));
+    int nextTaskID;
     int *minLaxityTaskArr=NULL,minLaxityTaskCount=0,i;
     laxityArr=FindLaxityOfAvailableTasks(activeTasks,activeTaskCount,*current,execArr);
     minLaxity=FindMinLaxity(laxityArr,activeTaskCount);
@@ -127,7 +129,12 @@ struct task* FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,floa
             minLaxityTaskCount++;
         }
     }
-    return nextTask;
+    //break the tie among tasks if multiple tasks with min laxity
+    if(minLaxityTaskCount>1)
+        nextTaskID=BreakTie(minLaxityTaskArr,minLaxityTaskCount,execArr,prevTask);
+    else
+        nextTaskID=minLaxityTaskArr[0];
+    return nextTaskID;
 }
 
 float* FindLaxityOfAvailableTasks(int *activeTasks,int activeTaskCount,float current,float *execArr)
@@ -165,4 +172,58 @@ float FindMinLaxity(float *activeTasksLaxity,int activeTaskCount)
             minLaxity=activeTasksLaxity[i];
     }
     return minLaxity;
+}
+
+int BreakTie(int *minLaxityTaskArr,int minLaxityTaskCount,float *execArr,int prevTask)
+{
+    int i,*minExecutionTimeTasks=NULL,minExeTasksCount=0,minLaxityTask=0,minIDTask;
+    float minExeTime;
+    //continue the currently executing task if minLaxityTaskArr contains cur task
+    if(prevTask!=0)
+    {
+        for(i=0;i<minLaxityTaskCount;i++)
+        {
+            if(minLaxityTaskArr[i]==prevTask)
+            {
+                return minLaxityTaskArr[i];
+            }
+        }
+    }
+    minExeTime=*(execArr+(minLaxityTaskArr[minLaxityTask]-1)*2+1);
+    //else, check for the one with min remaining execution time and schedule it
+    //find the min execution time among the set of tasks
+    for(i=1;i<minLaxityTaskCount;i++)
+    {
+        //check if the remaining time of the task is less than one with already assigned
+        if(*(execArr+(minLaxityTaskArr[i]-1)*2+1)<minExeTime)
+        {
+            minExeTime=*(execArr+(minLaxityTaskArr[i]-1)*2+1);
+            minLaxityTask=minLaxityTaskArr[i];
+        }
+    }
+    //check for the tasks present with min laxities with min execution time
+    for(i=0;i<minLaxityTaskCount;i++)
+    {
+        //if execution time of a task is equal to min exec time, add it to the array
+        if(*(execArr+(minLaxityTaskArr[i]-1)*2+1)==minExeTime)
+        {
+            minExecutionTimeTasks=(int *)realloc(minExecutionTimeTasks,minExeTasksCount*sizeof(int)+sizeof(int));
+            minExecutionTimeTasks[minExeTasksCount]=minLaxityTaskArr[i];
+            minExeTasksCount++;
+        }
+    }
+    
+    //if multiple with min execution times
+    if(minExeTasksCount>1)
+    {
+        minIDTask=minExecutionTimeTasks[0];
+        //find the one with min id
+        for(i=1;i<minExeTasksCount;i++)
+        {
+            if(minExecutionTimeTasks[i]<minIDTask)
+                minIDTask=minExecutionTimeTasks[i];
+        }
+    }
+    else
+        return minExecutionTimeTasks[0];
 }

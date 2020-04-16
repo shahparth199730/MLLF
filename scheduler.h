@@ -78,11 +78,13 @@ struct job* AddOverheadJob(struct job*,int,float,int,bool);
 
 struct job* AddOverheadToSchedule(struct job*,int*,float*,int*,bool);
 
-struct task* FindNextTaskToBeScheduled(int *,int ,float *,struct task *,float *);
+int FindNextTaskToBeScheduled(int *,int ,float *,struct task *,float *,int);
 
 float* FindLaxityOfAvailableTasks(int *,int ,float ,float *);
 
 float FindLaxity(int,float*,float);
 
 float FindMinLaxity(float*,int);
+
+int BreakTie(int*,int,float*,int);
 #endif
