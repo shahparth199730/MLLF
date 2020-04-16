@@ -57,7 +57,7 @@ float FindScheduleEnd(float,float);
 
 struct job* FindFeasibleSchedule(struct task*,int,int*);
 
-int* FindCurrentlyActiveTasks(struct task*,int,float);
+int* FindCurrentlyActiveTasks(float*,int,float,int*);
 
 float* CreateExecutionTimeArr(int);
 

@@ -5,20 +5,38 @@ struct job* FindFeasibleSchedule(struct task* taskSet,int noOfTasks,int *jobCoun
 {
     float *execArr;
     struct job *schedule;
+    int *activeTaskCount,count=0,i,*activeTasks;
+    activeTaskCount=&count;
     execArr=CreateExecutionTimeArr(noOfTasks);
     InitializeExecutionTimeArr(execArr,taskSet,noOfTasks);
+    activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,0.0,activeTaskCount);
     return schedule;
 }
 
 
-int* FindCurrentlyActiveTasks(struct task* taskSet,int noOfTasks,float currentTime)
+int* FindCurrentlyActiveTasks(float* executionTimeArr,int noOfTasks,float currentTime,int *activeTaskCount)
 {
     //TODO: push the ids of the currently active tasks to the output
+    //active tasks are those who have been released and not finished yet
+    int i,*activeTasks=NULL;
+    for(i=0;i<noOfTasks;i++)
+    {
+        if(*(executionTimeArr+i*2)<=currentTime )
+        {
+            if((*(executionTimeArr+i*2+1))>0)
+            {
+                activeTasks=(int *)realloc(activeTasks,*activeTaskCount*sizeof(int)+sizeof(int));
+                activeTasks[(*activeTaskCount)]=i+1;
+                (*activeTaskCount)++;
+            }
+        }
+    }
+    return activeTasks;
 }
 
 float* CreateExecutionTimeArr(int noOfTasks)
 {
-    float* executionTimeArr=(float *) malloc(noOfTasks*2);
+    float* executionTimeArr=(float *) malloc(noOfTasks*2*sizeof(float));
     return executionTimeArr;
 }
 
@@ -31,11 +49,9 @@ void InitializeExecutionTimeArr(float* executionTimeArr,struct task* taskSet,int
     for(i=0;i<noOfTasks;i++)
     {
         //set phase for the first index in the row and actual execution time for the next
-        *(executionTimeArr+i)=taskSet[i].phase;
-        float random=GetRandomNumber();        
-        *(executionTimeArr+i+1)=(random)*taskSet[i].c;
+        *(executionTimeArr+i*2)=taskSet[i].phase;           
+        *(executionTimeArr+i*2+1)=GetRandomNumber()*taskSet[i].c;
     }
-    
 }
 
 

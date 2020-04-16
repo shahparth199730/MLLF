@@ -26,18 +26,21 @@ bool CreateSchedule(char* fileName)
     int noOfTasks=0,*count,noOfJobs,*jobCount;
     count=&noOfTasks;
     struct task *taskSet=InitializeTaskSet(fileName,count);
-    float hyperperiod,inPhaseTime,start=0.0,end;
-    struct job *schedule;
-    jobCount=&noOfJobs;
-    PrintTaskSet(taskSet,*count);
-    if(CheckTaskSetFeasibility(taskSet,noOfTasks))
+    if(taskSet!=NULL)
     {
-      hyperperiod=CalculateHyperPeriod(taskSet,*count);
-      PrintHyperPeriod(hyperperiod);
-      inPhaseTime=Inphase(taskSet, *count,hyperperiod);
-      end=FindScheduleEnd(inPhaseTime,hyperperiod);
-      schedule=FindFeasibleSchedule(taskSet,noOfTasks,jobCount);
-      res=true;
+        float hyperperiod,inPhaseTime,start=0.0,end;
+        struct job *schedule;
+        jobCount=&noOfJobs;
+        PrintTaskSet(taskSet,*count);
+        if(CheckTaskSetFeasibility(taskSet,noOfTasks))
+        {
+          hyperperiod=CalculateHyperPeriod(taskSet,*count);
+          PrintHyperPeriod(hyperperiod);
+          inPhaseTime=Inphase(taskSet, *count,hyperperiod);
+          end=FindScheduleEnd(inPhaseTime,hyperperiod);
+          schedule=FindFeasibleSchedule(taskSet,noOfTasks,jobCount);
+          res=true;
+        }
     }
     return res; 
 }
@@ -45,7 +48,7 @@ bool CreateSchedule(char* fileName)
 struct task* InitializeTaskSet(char *fileName,int* count)
 {
     FILE *fp;
-    struct task *taskSet;
+    struct task *taskSet=NULL;
     fp=fopen(fileName,"r");
     if(fp!=NULL)
     {
