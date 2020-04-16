@@ -3,7 +3,8 @@
 
 struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,int *jobCount)
 {
-    float *execArr,current=0.0,*cur,*latencyOfActiveTasks,duration;
+    float *execArr,current=0.0,*cur,*latencyOfActiveTasks,duration,*minTaskLaxity,minLaxity;
+    minTaskLaxity=&minLaxity;
     cur=&current;
     struct job *schedule=NULL;
     int *activeTaskCount,count=0,i,*activeTasks,*noOfJobsInSchedule,jobCo=0,*noOfOverheads,overheadCount=0,prevTaskID=0,nextTaskID;
@@ -19,9 +20,9 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         schedule=AddOverheadToSchedule(schedule,noOfJobsInSchedule,cur,noOfOverheads,true);
         //among the available tasks, look for the tasks available
         activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,*cur,activeTaskCount);
-        nextTaskID=FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr,prevTaskID);
+        nextTaskID=FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr,prevTaskID,minTaskLaxity);
         //TODO: look for how much period the task can be scheduled
-        duration=FindJobDuration(nextTaskID,taskSet,execArr,*cur,noOfTasks,end);
+        duration=FindJobDuration(nextTaskID,taskSet,execArr,*cur,noOfTasks,end,*minTaskLaxity);
         //TODO: for period, look when the next event occurs 1. new job come 2. TQ expires 3. job finishes(find the min among these)
         //TODO: create a job for that much period
         //TODO: add that job to the schedule
@@ -121,7 +122,7 @@ struct job* AddOverheadJob(struct job* schedule,int noOfJobsInSchedule,float cur
     return schedule;
 }
 
-int FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float *current,struct task *taskSet,float *execArr,int prevTask)
+int FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float *current,struct task *taskSet,float *execArr,int prevTask,float *minTaskLatency)
 {
     //find latency of all the tasks available
     float *laxityArr=NULL,minLaxity;
@@ -129,6 +130,7 @@ int FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float *curren
     int *minLaxityTaskArr=NULL,minLaxityTaskCount=0,i;
     laxityArr=FindLaxityOfAvailableTasks(activeTasks,activeTaskCount,*current,execArr);
     minLaxity=FindMinLaxity(laxityArr,activeTaskCount);
+    *minTaskLatency=minLaxity;
     for(i=0;i<activeTaskCount;i++)
     {
         if(laxityArr[i]==minLaxity)
@@ -238,18 +240,31 @@ int BreakTie(int *minLaxityTaskArr,int minLaxityTaskCount,float *execArr,int pre
         return minExecutionTimeTasks[0];
 }
 
-float FindJobDuration(int nextTaskID,struct task *taskSet,float *execArr,float current,int noOFTasks,float end)
+float FindJobDuration(int nextTaskID,struct task *taskSet,float *execArr,float current,int noOfTasks,float end,float curMinLaxity)
 {
-    float duration,nextTaskArrival;
+    float duration,nextTaskArrival,currentTaskOver,nearestEvent,tq,tqOverEvent;
+    int tmin;
     /*3 events until next job
         1. new job comes
         2. current task over
         3. TQ expires
     */
     //1.new job comes
-    nextTaskArrival=FindNextTaskArrival(taskSet,execArr,current,noOFTasks,end);
+    nextTaskArrival=FindNextTaskArrival(taskSet,execArr,current,noOfTasks,end);
+    currentTaskOver= current+*(execArr+(nextTaskID-1)*2+1);
+    nearestEvent=(nextTaskArrival!=0&&nextTaskArrival<currentTaskOver?nextTaskArrival:currentTaskOver);
+    //Time Quantum
+    tmin=FindTMIN(taskSet,noOfTasks,nextTaskID,current,curMinLaxity,execArr);
+    if(tmin!=0)
+    {
+        //time quantum=deadline of the min-current laxity
+        tq=*(execArr+2*(tmin-1))-curMinLaxity;
+    }
+    tqOverEvent=current+tq;
+    nearestEvent=(tqOverEvent<nearestEvent?nearestEvent:tqOverEvent);
     //TODO: verify if next task arrival is not 0
     //Duration=nextEventTime-current;
+    duration=nearestEvent-current;
     return duration;
 }
 
@@ -288,4 +303,25 @@ float FindNextTaskArrival(struct task *taskSet,float *execArr,float current,int 
     free(nextJobArrival);
     //int_max only is no remaining job till end for any task
     return (nearestJobArrivalTime==INT_MAX?0.0:nearestJobArrivalTime);
+}
+
+int FindTMIN(struct task *taskSet,int noOfTasks,int nextTaskID,float current,float curMinLatency,float *execArr)
+{
+    //TMin is the one which has earliest deadline among all the tasks and latency greater than the current task latency
+    int i,j=0,tmin=0;
+    float curTaskDeadline=*(execArr+(nextTaskID-1)*2);
+    for(i=0;i<noOfTasks;i++)
+    {
+        if(i!=nextTaskID)
+        {
+            //deadline must be greater than current and nearest i.e.., nearer than current task's deadline
+            if(*(execArr+i*2)<curTaskDeadline && (j==0 || *(execArr+2*i)<*(execArr+2*(tmin-1))))
+            {
+                tmin=i+1;
+                j++;
+            }
+
+        }
+    }
+    return tmin;
 }
