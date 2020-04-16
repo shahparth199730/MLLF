@@ -20,7 +20,7 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         schedule=AddOverheadToSchedule(schedule,noOfJobsInSchedule,cur,noOfOverheads,true);
         //among the available tasks, look for the tasks available
         activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,*cur,activeTaskCount);
-        FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr);
+        nextTask=FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr);
         current+=end;
        // nextTask=FindNextTaskToBeScheduled(activeTasks,activeTaskCount,current,taskSet,execArr);
         //previousTask=nextTask;
@@ -126,7 +126,7 @@ struct task* FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,floa
 float* FindLaxityOfAvailableTasks(int *activeTasks,int activeTaskCount,float current,float *execArr)
 {
     int i;
-    float *activeTasksLaxity=(float*)malloc(activeTaskCount*sizeof(float));
+    float *activeTasksLaxity=(float*)malloc(activeTaskCount*sizeof(float)),minLaxity;
     for(i=0;i<activeTaskCount;i++)
     {
         //find latency for each active task
@@ -134,6 +134,8 @@ float* FindLaxityOfAvailableTasks(int *activeTasks,int activeTaskCount,float cur
         laxity=FindLaxity(activeTasks[i],execArr,current);
         activeTasksLaxity[i]=laxity;
     }
+    minLaxity=FindMinLaxity(activeTasksLaxity,activeTaskCount);
+    printf("Min laxity is %.2f\n",minLaxity);
     return activeTasksLaxity;
 }
 
@@ -145,4 +147,16 @@ float FindLaxity(int taskID,float *execArr,float current)
     float laxity;
     laxity=*(execArr+(taskID-1)*2+1)-(current+*(execArr+(taskID-1)*2));
     return laxity;
+}
+
+float FindMinLaxity(float *activeTasksLaxity,int activeTaskCount)
+{
+    int i;
+    float minLaxity=activeTasksLaxity[0];
+    for(i=1;i<activeTaskCount;i++)
+    {
+        if(activeTasksLaxity[i]<minLaxity)
+            minLaxity=activeTasksLaxity[i];
+    }
+    return minLaxity;
 }

@@ -83,4 +83,6 @@ struct task* FindNextTaskToBeScheduled(int *,int ,float *,struct task *,float *)
 float* FindLaxityOfAvailableTasks(int *,int ,float ,float *);
 
 float FindLaxity(int,float*,float);
+
+float FindMinLaxity(float*,int);
 #endif
