@@ -20,6 +20,15 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         //among the available tasks, look for the tasks available
         activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,*cur,activeTaskCount);
         nextTaskID=FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr,prevTaskID);
+        //TODO: look for how much period the task can be scheduled
+        //TODO: for period, look when the next event occurs 1. new job come 2. TQ expires 3. job finishes(find the min among these)
+        //TODO: create a job for that much period
+        //TODO: add that job to the schedule
+        //TODO: increment the current by that time duration
+        //TODO: reduce the remaining exec time of the task
+        //TODO: if the task get finished, reassign the exec Array
+        //TODO: if the newly allocated task is not equal to prev and prev!=0, add premption ovehead
+
         current+=end;
         //TODO: set prev task id nd next task id
         //TODO: add to the schedule
