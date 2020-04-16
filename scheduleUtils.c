@@ -18,7 +18,6 @@ int* FindCurrentlyActiveTasks(struct task* taskSet,int noOfTasks,float currentTi
 
 float* CreateExecutionTimeArr(int noOfTasks)
 {
-    /* Why noOfTasks*2 has been done? Please clarify it to me. i am not getting it.*/
     float* executionTimeArr=(float *) malloc(noOfTasks*2);
     return executionTimeArr;
 }
