@@ -127,6 +127,8 @@ float* FindLaxityOfAvailableTasks(int *activeTasks,int activeTaskCount,float cur
 {
     int i;
     float *activeTasksLaxity=(float*)malloc(activeTaskCount*sizeof(float)),minLaxity;
+    int *minLaxityTaskArr=NULL,minLaxityTaskCount=0;
+
     for(i=0;i<activeTaskCount;i++)
     {
         //find latency for each active task
@@ -135,7 +137,16 @@ float* FindLaxityOfAvailableTasks(int *activeTasks,int activeTaskCount,float cur
         activeTasksLaxity[i]=laxity;
     }
     minLaxity=FindMinLaxity(activeTasksLaxity,activeTaskCount);
-    printf("Min laxity is %.2f\n",minLaxity);
+    for(i=0;i<activeTaskCount;i++)
+    {
+        if(activeTasksLaxity[i]==minLaxity)
+        {
+            minLaxityTaskArr=(int*)realloc(minLaxityTaskArr,minLaxityTaskCount*sizeof(int)+sizeof(int));
+            //adding the task id to the array
+            minLaxityTaskArr[minLaxityTaskCount]=activeTasks[i];
+            minLaxityTaskCount++;
+        }
+    }
     return activeTasksLaxity;
 }
 
