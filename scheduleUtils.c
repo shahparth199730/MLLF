@@ -105,6 +105,7 @@ struct job* AddOverheadJob(struct job* schedule,int noOfJobsInSchedule,float cur
     schedule[noOfJobsInSchedule].id[0]=0;
     schedule[noOfJobsInSchedule].id[1]=0;
     schedule[noOfJobsInSchedule].id[2]=noOfOverheads;
+    schedule[noOfJobsInSchedule].isOverhead=true;
     schedule[noOfJobsInSchedule].jobType=(isDesionOverhead?contextOverhead:preemptionOverhead);
     return schedule;
 }
