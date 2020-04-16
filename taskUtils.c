@@ -23,10 +23,12 @@ bool CreateSchedule(char* fileName)
 {
   //read the taskset from the file
     bool res=false;
-    int noOfTasks=0,*count;
+    int noOfTasks=0,*count,noOfJobs,*jobCount;
     count=&noOfTasks;
-    struct task *taskSet=InitializeTaskSet(fileName,&noOfTasks);
+    struct task *taskSet=InitializeTaskSet(fileName,count);
     float hyperperiod,inPhaseTime,start=0.0,end;
+    struct job *schedule;
+    jobCount=&noOfJobs;
     PrintTaskSet(taskSet,*count);
     if(CheckTaskSetFeasibility(taskSet,noOfTasks))
     {
@@ -34,6 +36,7 @@ bool CreateSchedule(char* fileName)
       PrintHyperPeriod(hyperperiod);
       inPhaseTime=Inphase(taskSet, *count,hyperperiod);
       end=FindScheduleEnd(inPhaseTime,hyperperiod);
+      schedule=FindFeasibleSchedule(taskSet,noOfTasks,jobCount);
       res=true;
     }
     return res; 
@@ -91,15 +94,6 @@ void PrintTaskSet(struct task *taskSet,int noOfTasks)
       printf("ID:%d\tPhase:%.2f\tPeriod:%.2f\tExecution Time:%.2f\tRelative Deadline: %.2f\n",
       taskSet[i].id,taskSet[i].phase,taskSet[i].p,taskSet[i].c,taskSet[i].d);
   }
-}
-
-float GetRandomNumber()
-{
-    //everytime generates a different random number within the given range
-    float randomNumber;
-    srand(time(0));
-    randomNumber=((rand()%5)+6)/10.0;
-    return randomNumber;
 }
 
 /* It will find the hyperperiod by using gcd and lcm functions and as per the formula of finding hyperperiod. */

@@ -25,7 +25,7 @@ struct job
   float endTime;
   struct task *associatedTask;
   float absoluteDeadline;
-}
+};
 
 struct task* AllocateTaskSet(struct task*);
 
@@ -54,4 +54,12 @@ bool CheckTaskSetFeasibility(struct task*,int);
 float Inphase(struct task*,int,float);
 
 float FindScheduleEnd(float,float);
+
+struct job* FindFeasibleSchedule(struct task*,int,int*);
+
+int* FindCurrentlyActiveTasks(struct task*,int,float);
+
+float* CreateExecutionTimeArr(int);
+
+void InitializeExecutionTimeArr(float*,struct task*,int);
 #endif
