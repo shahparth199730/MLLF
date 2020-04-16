@@ -38,7 +38,7 @@ bool CreateSchedule(char* fileName)
           PrintHyperPeriod(hyperperiod);
           inPhaseTime=Inphase(taskSet, *count,hyperperiod);
           end=FindScheduleEnd(inPhaseTime,hyperperiod);
-          schedule=FindFeasibleSchedule(taskSet,noOfTasks,jobCount);
+          schedule=FindFeasibleSchedule(taskSet,end,noOfTasks,jobCount);
           res=true;
         }
     }

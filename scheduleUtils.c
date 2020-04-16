@@ -1,14 +1,32 @@
 #include"scheduler.h"
 
 
-struct job* FindFeasibleSchedule(struct task* taskSet,int noOfTasks,int *jobCount)
+struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,int *jobCount)
 {
-    float *execArr;
-    struct job *schedule;
-    int *activeTaskCount,count=0,i,*activeTasks;
+    float *execArr,current=0.0,*cur;
+    cur=&current;
+    struct job *schedule=NULL;
+    int *activeTaskCount,count=0,i,*activeTasks,*noOfJobsInSchedule,jobCo=0,*noOfOverheads,overheadCount=0;
+    noOfOverheads=&overheadCount;
     activeTaskCount=&count;
+    noOfJobsInSchedule=&jobCo;
     execArr=CreateExecutionTimeArr(noOfTasks);
     InitializeExecutionTimeArr(execArr,taskSet,noOfTasks);
+    //initially find currently active tasks at 
+    while(current<end)
+    {
+        //add the decision making overhead everytime the scheduler is called
+        //call the scheduler
+        schedule=AddOverheadToSchedule(schedule,noOfJobsInSchedule,cur,noOfOverheads,false);
+        for(i=0;i<*noOfJobsInSchedule;i++)
+        {
+            printf("job id: %d %d %d Start Time:%.2f End Time:%.2f \n",schedule[*noOfJobsInSchedule-1].id[0]
+            ,schedule[*noOfJobsInSchedule-1].id[1],schedule[*noOfJobsInSchedule-1].id[2]
+            ,schedule[*noOfJobsInSchedule-1].startTime
+            ,schedule[*noOfJobsInSchedule-1].endTime);
+        }
+        current+=end;
+    }
     activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,0.0,activeTaskCount);
     return schedule;
 }
@@ -62,3 +80,32 @@ float GetRandomNumber()
     randomNumber=((rand()%5)+6)/10.0;
     return randomNumber;
 }
+
+struct job* AddOverheadToSchedule(struct job* schedule,int *noOfJobsInSchedule,float *current,int *noOfOverheads,bool isDesionOverhead)
+{
+    //create a job with overhead
+    schedule=AddOverheadJob(schedule,*noOfJobsInSchedule,*current,*noOfOverheads,isDesionOverhead);
+    (*noOfJobsInSchedule)++;
+    (*current)+=0.1;
+    (*noOfOverheads)+=1;
+    return schedule;
+}
+
+
+
+struct job* AddOverheadJob(struct job* schedule,int noOfJobsInSchedule,float current,int noOfOverheads,bool isDesionOverhead)
+{
+    schedule=(struct job*)realloc(schedule,(noOfJobsInSchedule*sizeof(struct job))+sizeof(struct job));
+    //assign the job for decision overhead
+    schedule[noOfJobsInSchedule].startTime=current;
+    //add  0.1 and 0.2 for premption overhead
+    schedule[noOfJobsInSchedule].endTime=current+=(isDesionOverhead?0.1:0.2);
+    schedule[noOfJobsInSchedule].associatedTask=NULL;
+    schedule[noOfJobsInSchedule].absoluteDeadline=0.0;
+    schedule[noOfJobsInSchedule].id[0]=0;
+    schedule[noOfJobsInSchedule].id[1]=0;
+    schedule[noOfJobsInSchedule].id[2]=noOfOverheads;
+    schedule[noOfJobsInSchedule].jobType=(isDesionOverhead?contextOverhead:preemptionOverhead);
+    return schedule;
+}
+

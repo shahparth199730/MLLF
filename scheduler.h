@@ -18,6 +18,12 @@ struct task{
   float c;
 };
 
+enum jobType
+{Normal,
+contextOverhead,
+preemptionOverhead
+};
+
 struct job
 {
   int id[3];
@@ -25,6 +31,11 @@ struct job
   float endTime;
   struct task *associatedTask;
   float absoluteDeadline;
+  //to identify if the job in the schedule is an overhead, like context switch and pre-emption
+  //associated Task is NULL, and id=00i for i=0 to n(n-no of overheads) for such jobs
+  //to identify which overhead among the overheads, we have enum datatype
+  bool isOverhead;
+  int jobType;
 };
 
 struct task* AllocateTaskSet(struct task*);
@@ -55,11 +66,15 @@ float Inphase(struct task*,int,float);
 
 float FindScheduleEnd(float,float);
 
-struct job* FindFeasibleSchedule(struct task*,int,int*);
+struct job* FindFeasibleSchedule(struct task*,float,int,int*);
 
 int* FindCurrentlyActiveTasks(float*,int,float,int*);
 
 float* CreateExecutionTimeArr(int);
 
 void InitializeExecutionTimeArr(float*,struct task*,int);
+
+struct job* AddOverheadJob(struct job*,int,float,int,bool);
+
+struct job* AddOverheadToSchedule(struct job*,int*,float*,int*,bool);
 #endif
