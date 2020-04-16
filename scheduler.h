@@ -100,4 +100,6 @@ int FindTMIN(struct task *,int,int,float,float,float *);
 
 struct job *AddJobToSchedule(struct job* ,struct task*,int,float,float*,float*,int*,int);
 
+void ResetNextJob(struct task *,float *,int );
+
 #endif

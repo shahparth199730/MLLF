@@ -31,7 +31,7 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         if(nextTaskID==0)
             break;
         //check if job prempted i.e.., job was asked to leave but not complete yet
-        if(prevTaskID!=0 && nextTaskID!=prevTaskID && isPrevJobFinished)
+        if(prevTaskID!=0 && nextTaskID!=prevTaskID && !isPrevJobFinished)
             schedule=AddOverheadToSchedule(schedule,noOfJobsInSchedule,cur,noOfOverheads,false);
 
 
@@ -42,6 +42,14 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         schedule=AddJobToSchedule(schedule,taskSet,nextTaskID,duration,execArr,cur,noOfJobsInSchedule,latestSubJobIdArr[nextTaskID-1]);
 
         //TODO: check if the isPrevJobFinished has finished already
+        //duration==remaining execution time for that task
+        if(*(execArr+(nextTaskID-1)*2+1)==duration)
+        {
+            isPrevJobFinished=true;
+            //reset next job
+            ResetNextJob(taskSet,execArr,nextTaskID);
+            printf("Task ID: %d Exec Time:%.2f Arrival Time:%.2f\n",nextTaskID,*(execArr+(nextTaskID-1)*2+1),*(execArr+(nextTaskID-1)*2));
+        }
         //TODO: if job finished,reinitialize the jobid for that task,else update the latestJobID for the task executed
         //TODO: also set isPrevJobFinished
         
@@ -371,4 +379,10 @@ struct job *AddJobToSchedule(struct job* schedule,struct task *taskSet,int nextT
     *cur+=duration;
     (*noOfJobsInSchedule)++;
     return schedule;
+}
+
+void ResetNextJob(struct task *taskSet,float *execArr,int nextTaskID)
+{
+    *(execArr+(nextTaskID-1)*2)+=taskSet[nextTaskID-1].p;           
+    *(execArr+(nextTaskID-1)*2+1)=GetRandomNumber()*taskSet[nextTaskID-1].c;
 }
