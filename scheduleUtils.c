@@ -7,7 +7,13 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
     minTaskLaxity=&minLaxity;
     cur=&current;
     struct job *schedule=NULL;
+    bool isPrevJobFinished;
+    int *latestSubJobIdArr=(int *)malloc(noOfTasks*sizeof(int));
     int *activeTaskCount,count=0,i,*activeTasks,*noOfJobsInSchedule,jobCo=0,*noOfOverheads,overheadCount=0,prevTaskID=0,nextTaskID;
+    //initilize the task id array
+    //index 0 is for task 1, i.e.., i for task id i+1
+    for(i=0;i<noOfTasks;i++)
+        latestSubJobIdArr[i]=1;
     noOfOverheads=&overheadCount;
     activeTaskCount=&count;
     noOfJobsInSchedule=&jobCo;
@@ -21,13 +27,28 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         //among the available tasks, look for the tasks available
         activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,*cur,activeTaskCount);
         nextTaskID=FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr,prevTaskID,minTaskLaxity);
-        //TODO: look for how much period the task can be scheduled
+        //means no next task present, so simply exit
+        if(nextTaskID==0)
+            break;
+        //check if job prempted i.e.., job was asked to leave but not complete yet
+        if(prevTaskID!=0 && nextTaskID!=prevTaskID && isPrevJobFinished)
+            schedule=AddOverheadToSchedule(schedule,noOfJobsInSchedule,cur,noOfOverheads,false);
+
+
+        //for duration, look when the next event occurs 1. new job come 2. TQ expires 3. job finishes(find the min among these)
         duration=FindJobDuration(nextTaskID,taskSet,execArr,*cur,noOfTasks,end,*minTaskLaxity);
-        //TODO: for period, look when the next event occurs 1. new job come 2. TQ expires 3. job finishes(find the min among these)
-        //TODO: create a job for that much period
+        //TODO: create a job for that much period and add it to the schedule
+        printf("Finally duration is %.2f\n",duration);
+        schedule=AddJobToSchedule(schedule,taskSet,nextTaskID,duration,execArr,cur,noOfJobsInSchedule,latestSubJobIdArr[nextTaskID-1]);
+
+        //TODO: check if the isPrevJobFinished has finished already
+        //TODO: if job finished,reinitialize the jobid for that task,else update the latestJobID for the task executed
+        //TODO: also set isPrevJobFinished
+        
         //TODO: add that job to the schedule
         //TODO: increment the current by that time duration
         //TODO: reduce the remaining exec time of the task
+
         //TODO: if the task get finished, reassign the exec Array
         //TODO: if the newly allocated task is not equal to prev and prev!=0, add premption ovehead
 
@@ -126,7 +147,7 @@ int FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float *curren
 {
     //find latency of all the tasks available
     float *laxityArr=NULL,minLaxity;
-    int nextTaskID;
+    int nextTaskID=0;
     int *minLaxityTaskArr=NULL,minLaxityTaskCount=0,i;
     laxityArr=FindLaxityOfAvailableTasks(activeTasks,activeTaskCount,*current,execArr);
     minLaxity=FindMinLaxity(laxityArr,activeTaskCount);
@@ -251,10 +272,13 @@ float FindJobDuration(int nextTaskID,struct task *taskSet,float *execArr,float c
     */
     //1.new job comes
     nextTaskArrival=FindNextTaskArrival(taskSet,execArr,current,noOfTasks,end);
+    printf("Next task arrival at %.2f\n",nextTaskArrival);
     currentTaskOver= current+*(execArr+(nextTaskID-1)*2+1);
+    printf("Current task over at %.2f\n",currentTaskOver);
     nearestEvent=(nextTaskArrival!=0&&nextTaskArrival<currentTaskOver?nextTaskArrival:currentTaskOver);
     //Time Quantum
     tmin=FindTMIN(taskSet,noOfTasks,nextTaskID,current,curMinLaxity,execArr);
+    printf("Tmin exists %d\n",tmin!=0);
     if(tmin!=0)
     {
         //time quantum=deadline of the min-current laxity
@@ -309,13 +333,13 @@ int FindTMIN(struct task *taskSet,int noOfTasks,int nextTaskID,float current,flo
 {
     //TMin is the one which has earliest deadline among all the tasks and latency greater than the current task latency
     int i,j=0,tmin=0;
-    float curTaskDeadline=*(execArr+(nextTaskID-1)*2);
+    float curTaskDeadline=*(execArr+(nextTaskID-1)*2)+taskSet[nextTaskID-1].p;
     for(i=0;i<noOfTasks;i++)
     {
         if(i!=nextTaskID)
         {
             //deadline must be greater than current and nearest i.e.., nearer than current task's deadline
-            if(*(execArr+i*2)<curTaskDeadline && (j==0 || *(execArr+2*i)<*(execArr+2*(tmin-1))))
+            if((*(execArr+i*2))+taskSet[i].p<curTaskDeadline && (j==0 || (*(execArr+2*i))+taskSet[i].p<(*(execArr+2*(tmin-1))+taskSet[tmin-1].p)))
             {
                 tmin=i+1;
                 j++;
@@ -324,4 +348,27 @@ int FindTMIN(struct task *taskSet,int noOfTasks,int nextTaskID,float current,flo
         }
     }
     return tmin;
+}
+
+
+struct job *AddJobToSchedule(struct job* schedule,struct task *taskSet,int nextTaskID,float duration,float *execArr,float *cur,int* noOfJobsInSchedule,int latestSubJobId)
+{
+    //TODO: increment number of jobs
+    
+    //create a job
+    schedule=(struct job*) realloc(schedule,*noOfJobsInSchedule*sizeof(struct job)+sizeof(struct job));
+    //execArr has job's arrival time only
+    schedule[*noOfJobsInSchedule].id[0]=nextTaskID;
+    schedule[*noOfJobsInSchedule].id[1]=floor((*(execArr+(nextTaskID-1)*2))/taskSet[nextTaskID-1].p)+1;
+    schedule[*noOfJobsInSchedule].id[2]=latestSubJobId;
+    schedule[*noOfJobsInSchedule].startTime=*cur;
+    schedule[*noOfJobsInSchedule].endTime=*cur+duration;
+    schedule[*noOfJobsInSchedule].associatedTask=taskSet+nextTaskID-1;
+    schedule[*noOfJobsInSchedule].absoluteDeadline=*(execArr+(nextTaskID-1)*2)+taskSet[nextTaskID-1].p;
+    schedule[*noOfJobsInSchedule].isOverhead=false;
+    schedule[*noOfJobsInSchedule].jobType=Normal;    
+    //incrememt current by the duration
+    *cur+=duration;
+    (*noOfJobsInSchedule)++;
+    return schedule;
 }

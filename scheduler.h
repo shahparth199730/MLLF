@@ -20,9 +20,10 @@ struct task{
 };
 
 enum jobType
-{Normal,
-contextOverhead,
-preemptionOverhead
+{
+  Normal,
+  contextOverhead,
+  preemptionOverhead
 };
 
 struct job
@@ -96,4 +97,7 @@ float FindJobDuration(int,struct task*,float*,float,int,float,float);
 float FindNextTaskArrival(struct task*,float*,float,int ,float);
 
 int FindTMIN(struct task *,int,int,float,float,float *);
+
+struct job *AddJobToSchedule(struct job* ,struct task*,int,float,float*,float*,int*,int);
+
 #endif
