@@ -7,6 +7,7 @@
 #include<math.h>
 #include<stdlib.h>
 #include<time.h>
+#include<limits.h>
 #define MAX 1000
 
 /* Structure of the task used to handle the periodic taskset*/
@@ -87,4 +88,8 @@ float FindLaxity(int,float*,float);
 float FindMinLaxity(float*,int);
 
 int BreakTie(int*,int,float*,int);
+
+float FindNextTaskArrival(struct task*,float*,float,int,float);
+
+float FindJobDuration(int,struct task*,float*,float,int,float);
 #endif

@@ -3,7 +3,7 @@
 
 struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,int *jobCount)
 {
-    float *execArr,current=0.0,*cur,*latencyOfActiveTasks;
+    float *execArr,current=0.0,*cur,*latencyOfActiveTasks,duration;
     cur=&current;
     struct job *schedule=NULL;
     int *activeTaskCount,count=0,i,*activeTasks,*noOfJobsInSchedule,jobCo=0,*noOfOverheads,overheadCount=0,prevTaskID=0,nextTaskID;
@@ -21,6 +21,7 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,*cur,activeTaskCount);
         nextTaskID=FindNextTaskToBeScheduled(activeTasks,*activeTaskCount,cur,taskSet,execArr,prevTaskID);
         //TODO: look for how much period the task can be scheduled
+        duration=FindJobDuration(nextTaskID,taskSet,execArr,*cur,noOfTasks,end);
         //TODO: for period, look when the next event occurs 1. new job come 2. TQ expires 3. job finishes(find the min among these)
         //TODO: create a job for that much period
         //TODO: add that job to the schedule
@@ -235,4 +236,56 @@ int BreakTie(int *minLaxityTaskArr,int minLaxityTaskCount,float *execArr,int pre
     }
     else
         return minExecutionTimeTasks[0];
+}
+
+float FindJobDuration(int nextTaskID,struct task *taskSet,float *execArr,float current,int noOFTasks,float end)
+{
+    float duration,nextTaskArrival;
+    /*3 events until next job
+        1. new job comes
+        2. current task over
+        3. TQ expires
+    */
+    //1.new job comes
+    nextTaskArrival=FindNextTaskArrival(taskSet,execArr,current,noOFTasks,end);
+    //TODO: verify if next task arrival is not 0
+    //Duration=nextEventTime-current;
+    return duration;
+}
+
+float FindNextTaskArrival(struct task *taskSet,float *execArr,float current,int noOfTasks,float end)
+{
+    //find when is the next job coming for each task, the min among them is the next job arrival
+    float *nextJobArrival=(float *)malloc(noOfTasks*sizeof(float)),period,jobArrivalTime,nearestJobArrivalTime=INT_MAX;
+    int i,noOfJobs,j;
+    //initialize the array
+    for(i=0;i<noOfTasks;i++)
+        nextJobArrival[i]=INT_MAX;
+    
+    //for each task, see at what times job comes
+    for(i=0;i<noOfTasks;i++)
+    {
+        period=taskSet[i].p;
+        noOfJobs=floor(end/period);
+        for(j=0;j<noOfJobs;j++)
+        {
+            jobArrivalTime=j*period;
+            //start from the beginning and look first job which arrives after just after the current.
+            if(jobArrivalTime>current)
+            {
+                nextJobArrival[i]=jobArrivalTime;
+                break;
+            }
+        }
+    }
+    
+    for(i=0;i<noOfTasks;i++)
+    {
+        if(nextJobArrival[i]!=INT_MAX && nextJobArrival[i]<nearestJobArrivalTime)
+            nearestJobArrivalTime=nextJobArrival[i];
+    }
+
+    free(nextJobArrival);
+    //int_max only is no remaining job till end for any task
+    return (nearestJobArrivalTime==INT_MAX?0.0:nearestJobArrivalTime);
 }
