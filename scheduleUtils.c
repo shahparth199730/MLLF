@@ -3,18 +3,18 @@
 
 struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,int *jobCount)
 {
+    //TODO; free such arrays not needed in the end
     float *execArr,current=0.0,*cur,*latencyOfActiveTasks,duration,*minTaskLaxity,minLaxity;
     minTaskLaxity=&minLaxity;
     cur=&current;
     struct job *schedule=NULL;
     bool isPrevJobFinished;
     int *latestSubJobIdArr=(int *)malloc(noOfTasks*sizeof(int));
-    int *activeTaskCount,count=0,i,*activeTasks,*noOfJobsInSchedule,jobCo=0,*noOfOverheads,overheadCount=0,prevTaskID=0,nextTaskID;
+    int *activeTaskCount,count=0,i,*activeTasks,*noOfJobsInSchedule,jobCo=0,prevTaskID=0,nextTaskID;
     //initilize the task id array
     //index 0 is for task 1, i.e.., i for task id i+1
     for(i=0;i<noOfTasks;i++)
         latestSubJobIdArr[i]=1;
-    noOfOverheads=&overheadCount;
     activeTaskCount=&count;
     noOfJobsInSchedule=&jobCo;
     execArr=CreateExecutionTimeArr(noOfTasks);
@@ -25,7 +25,8 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
     {
         //add an overhead job whenever trying to make any decision
         //TODO: uncomment next line
-        //schedule=AddOverheadToSchedule(schedule,noOfJobsInSchedule,cur,noOfOverheads,true);
+        //elapse 0.1 sec for decision making
+        *cur+=0.1;
         //among the available tasks, look for the tasks available
         //TODO: how do we ensure the granularity of 0.1
         *activeTaskCount=0;
@@ -58,12 +59,10 @@ struct job* FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,in
         if(nextTaskID==0)
             break;
         //check if job prempted i.e.., job was asked to leave but not complete yet
+        //elapse the time in case of job preemption
         if(prevTaskID!=0 && nextTaskID!=prevTaskID && !isPrevJobFinished)
-        {
-            printf("premption overhead\n");
-            //TODO:uncomment next line
-            //schedule=AddOverheadToSchedule(schedule,noOfJobsInSchedule,cur,noOfOverheads,false);
-        }
+            *cur+=0.2;
+
 
         //for duration, look when the next event occurs 1. new job come 2. TQ expires 3. job finishes(find the min among these)
         duration=FindJobDuration(nextTaskID,taskSet,execArr,*cur,noOfTasks,end,*minTaskLaxity);

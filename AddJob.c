@@ -14,8 +14,6 @@ struct job *AddJobToSchedule(struct job* schedule,struct task *taskSet,int nextT
     schedule[*noOfJobsInSchedule].endTime=*cur+duration;
     schedule[*noOfJobsInSchedule].associatedTask=taskSet+nextTaskID-1;
     schedule[*noOfJobsInSchedule].absoluteDeadline=*(execArr+(nextTaskID-1)*2)+taskSet[nextTaskID-1].p;
-    schedule[*noOfJobsInSchedule].isOverhead=false;
-    schedule[*noOfJobsInSchedule].jobType=Normal;    
     //incrememt current by the duration
     printf("cur pehle was %.2f\n",*cur);
     *cur+=duration;
