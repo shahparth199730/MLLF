@@ -82,9 +82,9 @@ struct job* AddOverheadToSchedule(struct job*,int*,float*,int*,bool);
 
 int FindNextTaskToBeScheduled(int *,int ,float *,struct task *,float *,int,float*);
 
-float* FindLaxityOfAvailableTasks(int *,int ,float ,float *);
+float* FindLaxityOfAvailableTasks(int *,struct task *,int ,float ,float *);
 
-float FindLaxity(int,float*,float);
+float FindLaxity(struct task *,int,float*,float);
 
 float FindMinLaxity(float*,int);
 
@@ -101,5 +101,7 @@ int FindTMIN(struct task *,int,int,float,float,float *);
 struct job *AddJobToSchedule(struct job* ,struct task*,int,float,float*,float*,int*,int);
 
 void ResetNextJob(struct task *,float *,int );
+
+float getNextJobArrivalTime(float*,float,int);
 
 #endif
