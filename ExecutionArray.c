@@ -17,7 +17,7 @@ void InitializeExecutionTimeArr(float* executionTimeArr,struct task* taskSet,int
         //set phase for the first index in the row and actual execution time for the next
         *(executionTimeArr+i*2)=taskSet[i].phase;           
         *(executionTimeArr+i*2+1)=GetRandomNumber()*taskSet[i].c;
-        //*(executionTimeArr+i*2+1)=1*taskSet[i].c;
+        //(executionTimeArr+i*2+1)=1*taskSet[i].c;
     }
 }
 

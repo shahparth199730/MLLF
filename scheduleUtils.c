@@ -5,7 +5,7 @@ void FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,int *jobC
 {
     //TODO; free such arrays not needed in the end
     //Arrays that might be freed 
-    float *execArr=NULL,cur,duration,*minLax,minLaxityVal;
+    float *execArr=NULL,cur=0,duration,*minLax,minLaxityVal;
     minLax=&minLaxityVal;
     bool isPrevJobFinished;
     int *latestSubJobIdArr=(int *)malloc(noOfTasks*sizeof(int));
