@@ -16,14 +16,14 @@ void InitializeExecutionTimeArr(float* executionTimeArr,struct task* taskSet,int
     {
         //set phase for the first index in the row and actual execution time for the next
         *(executionTimeArr+i*2)=taskSet[i].phase;           
-        //*(executionTimeArr+i*2+1)=GetRandomNumber()*taskSet[i].c;
-        *(executionTimeArr+i*2+1)=1*taskSet[i].c;
+        *(executionTimeArr+i*2+1)=GetRandomNumber()*taskSet[i].c;
+        //*(executionTimeArr+i*2+1)=1*taskSet[i].c;
     }
 }
 
 void ResetNextJob(struct task *taskSet,float *execArr,int nextTaskID)
 {
     *(execArr+(nextTaskID-1)*2)+=taskSet[nextTaskID-1].p;           
-    //*(execArr+(nextTaskID-1)*2+1)=GetRandomNumber()*taskSet[nextTaskID-1].c;
-    *(execArr+(nextTaskID-1)*2+1)=1*taskSet[nextTaskID-1].c;
+    *(execArr+(nextTaskID-1)*2+1)=GetRandomNumber()*taskSet[nextTaskID-1].c;
+    //*(execArr+(nextTaskID-1)*2+1)=1*taskSet[nextTaskID-1].c;
 }
