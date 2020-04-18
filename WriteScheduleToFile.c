@@ -13,7 +13,7 @@ void WriteJobToFile(float startTime,float endTime,int jobID1,int jobID2,bool isI
             fprintf(fp,"Idle Time (%.2f-%.2f)\n",startTime,endTime);
     }
     else
-    printf("Error in writing the schedule to the file");
+        printf("Error in writing the schedule to the file");
     fclose(fp);
 }
 

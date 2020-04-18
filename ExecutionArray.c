@@ -23,7 +23,7 @@ void InitializeExecutionTimeArr(float* executionTimeArr,struct task* taskSet,int
 
 void ResetNextJob(struct task *taskSet,float *execArr,int nextTaskID)
 {
-    *(execArr+(nextTaskID-1)*2)+=taskSet[nextTaskID-1].p;           
+    (*(execArr+(nextTaskID-1)*2))+=taskSet[nextTaskID-1].p;           
     *(execArr+(nextTaskID-1)*2+1)=GetRandomNumber()*taskSet[nextTaskID-1].c;
     //*(execArr+(nextTaskID-1)*2+1)=1*taskSet[nextTaskID-1].c;
 }

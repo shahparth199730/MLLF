@@ -27,21 +27,7 @@ void FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,int *jobC
         //among the available tasks, look for the tasks available
         //TODO: how do we ensure the granularity of 0.1
         *activeTaskCount=0;
-        printf("\n\n\n");
         activeTasks=FindCurrentlyActiveTasks(execArr,noOfTasks,cur,activeTaskCount);
-        printf("Cur is %.2f\n",cur);
-        printf("General info for current tasks\n");
-        for(i=0;i<noOfTasks;i++)
-        {
-            printf("Task ID: %d Arrival Time: %.2f Rem Exec Time:%.2f\n",i+1
-            ,*(execArr+i*2),*(execArr+i*2+1));
-        }
-        printf("Below is the list of active tasks with count %d\n",*activeTaskCount);
-        for(int i=0;i<*activeTaskCount;i++)
-        {
-            printf("Task ID: %d Arrival Time: %.2f Rem Exec Time:%.2f\n",activeTasks[i]
-            ,*(execArr+(activeTasks[i]-1)*2),*(execArr+(activeTasks[i]-1)*2+1));
-        }
         //TODO: if active tasks is null, wait till the next job arrives
         //active count 0 means that 
         //1.either time is up
@@ -63,19 +49,13 @@ void FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,int *jobC
             WriteOverHeadToFile(cur,false);
             cur+=0.2;
         }
-    
         //for duration, look when the next event occurs 1. new job come 2. TQ expires 3. job finishes(find the min among these)
         duration=FindJobDuration(nextTaskID,taskSet,execArr,cur,noOfTasks,end,*minLax);
-        printf("Next Task ID %d and Duration %f aur cur hae %.2f and pehle remaining %f\n",nextTaskID,duration,cur
-        ,(*(execArr+(nextTaskID-1)*2+1)));
-        //printf("five exe %f\n",5.0-5.0);
-         //printf("Remaining is %.2f and reset hua %d\n",(*(execArr+(nextTaskID-1)*2+1))-duration,duration>=*(execArr+(nextTaskID-1)*2+1));
         WriteJobToFile(cur,cur+duration,nextTaskID,floor((*(execArr+(nextTaskID-1)*2))/taskSet[nextTaskID-1].p)+1,false);
-        cur+=duration; 
         //TODO: increase cur
         //TODO : write to the file 
         //duration==remaining execution time for that task,job is done
-        if(duration>=*(execArr+(nextTaskID-1)*2+1))
+        if(abs(duration-*(execArr+(nextTaskID-1)*2+1))<1e-9)
         {
             //if job finished,reinitialize the jobid for that task,else update the latestJobID for the task executed
             isPrevJobFinished=true;
@@ -90,16 +70,13 @@ void FindFeasibleSchedule(struct task* taskSet,float end,int noOfTasks,int *jobC
             isPrevJobFinished=false;
             latestSubJobIdArr[nextTaskID-1]++;
         }
-       
-        //TODO: also set isPrevJobFinished
-        //TODO: change the random
+        cur+=duration; 
         prevTaskID=nextTaskID;
-        //if(j>=30)
-        //break;
     }
+    printf("\n Schedule Written to the file successfully\n");
     free(execArr);
     free(latestSubJobIdArr);
-    free(activeTasks);
+    free(activeTasks);   
 }
 
 
