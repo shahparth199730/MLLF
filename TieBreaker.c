@@ -1,3 +1,6 @@
+/******************************************************************************************************************
+This will select job which was currently executing in the tie breaker scenario.
+******************************************************************************************************************/
 void TieBreaker(struct jobs *job,struct laxity *l,int i,int previd,float *min_deadline,int *min_id){
   if(l[i].id==previd&&previd!=-1){
     struct laxity temp=l[0];

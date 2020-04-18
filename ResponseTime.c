@@ -1,8 +1,10 @@
+/******************************************************************************************************************
+WaitingTime will calculate the response time of all the jobs in the taskset. Will find absolute response jitter, relative response jitter,minimum, maximum and average response time for all the tasks.
+******************************************************************************************************************/
 void ResponseTime(struct jobs* job,struct task t,FILE *fptr,int count,float k){
   float *response;
   for(int j=0;j<count;j++){
     int n=(k-t.phase[j])/t.p[j];
-    //printf("vaue of n is %d\n",n);
     response=(float *)malloc(sizeof(float)*n);
     int id=0;
     float min=FLT_MAX,max=FLT_MIN;
@@ -51,5 +53,6 @@ void ResponseTime(struct jobs* job,struct task t,FILE *fptr,int count,float k){
     fprintf(fptr,"Relative ResponseTime Jitter:%.2f\n",rmax);
     fprintf(fptr,"Average ResponseTime:%.2f\n",ravg/n);
   }
+  /*Freeing the dynamically allocated memory.*/
   free(response);
 }

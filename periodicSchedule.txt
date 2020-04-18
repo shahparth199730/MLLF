@@ -1,87 +1,95 @@
-0.10-0.90 : J1,1
-1.00-2.20 : J2,1
-2.30-4.00 : J3,1
-4.30-5.00 : J1,2
-5.10-5.20 : J1,2
-5.30-6.50 : J2,2
-6.60-8.00 : J3,1
-8.30-9.10 : J1,3
-9.20-10.00 : J3,1
-10.30-11.50 : J2,3
-11.60-12.00 : J3,1
-12.30-13.10 : J1,4
-13.20-13.80 : J3,1
-13.80-15.00 : IDLE
-15.10-16.00 : J2,4
-16.30-17.10 : J1,5
-17.20-17.50 : J2,4
-17.50-20.00 : IDLE
-20.10-20.90 : J1,6
-21.00-22.20 : J2,5
-22.30-24.00 : J3,2
-24.30-25.00 : J1,7
-25.10-25.20 : J1,7
-25.30-26.50 : J2,6
-26.60-28.00 : J3,2
-28.30-29.10 : J1,8
-29.20-30.00 : J3,2
-30.30-31.50 : J2,7
-31.60-32.00 : J3,2
-32.30-33.10 : J1,9
-33.20-33.80 : J3,2
-33.80-35.00 : IDLE
-35.10-36.00 : J2,8
-36.30-37.10 : J1,10
-37.20-37.50 : J2,8
-37.50-40.00 : IDLE
-40.10-40.90 : J1,11
-41.00-42.20 : J2,9
-42.30-44.00 : J3,3
-44.30-45.00 : J1,12
-45.10-45.20 : J1,12
-45.30-46.50 : J2,10
-46.60-48.00 : J3,3
-48.30-49.10 : J1,13
-49.20-50.00 : J3,3
-50.30-51.50 : J2,11
-51.60-52.00 : J3,3
-52.30-53.10 : J1,14
-53.20-53.80 : J3,3
-53.80-55.00 : IDLE
-55.10-56.00 : J2,12
-56.30-57.10 : J1,15
-57.20-57.50 : J2,12
-57.50-60.00 : IDLE
+0.00-0.10 : Decision Overhead
+0.10-0.80 : J1,1
+0.80-0.90 : Decision Overhead
+0.90-2.30 : J2,1
+2.30-2.40 : Decision Overhead
+2.40-3.10 : J3,1
+3.10-3.20 : Decision Overhead
+3.20-3.20 : J3,1
+3.20-3.30 : Decision Overhead
+3.30-4.00 : J4,1
+4.00-5.00 : IDLE
+5.00-5.10 : Decision Overhead
+5.10-5.80 : J1,2
+5.80-5.90 : Decision Overhead
+5.90-5.90 : J1,2
+5.90-6.00 : IDLE
+6.00-6.10 : Decision Overhead
+6.10-7.50 : J2,2
+7.50-10.00 : IDLE
+10.00-10.10 : Decision Overhead
+10.10-10.80 : J1,3
+10.80-10.90 : Decision Overhead
+10.90-11.60 : J3,2
+11.60-11.70 : Decision Overhead
+11.70-11.70 : J3,2
+11.70-12.00 : IDLE
+12.00-12.10 : Decision Overhead
+12.10-13.50 : J2,3
+13.50-15.00 : IDLE
+15.00-15.10 : Decision Overhead
+15.10-15.80 : J1,4
+15.80-15.90 : Decision Overhead
+15.90-16.60 : J4,2
+16.60-18.00 : IDLE
+18.00-18.10 : Decision Overhead
+18.10-19.50 : J2,4
+19.50-20.00 : IDLE
+20.00-20.10 : Decision Overhead
+20.10-20.80 : J1,5
+20.80-20.90 : Decision Overhead
+20.90-20.90 : J1,5
+20.90-21.00 : Decision Overhead
+21.00-21.70 : J3,3
+21.70-24.00 : IDLE
+24.00-24.10 : Decision Overhead
+24.10-25.00 : J2,5
+25.00-25.10 : Decision Overhead
+25.10-25.30 : Preemption Overhead
+25.30-26.00 : J1,6
+26.00-26.10 : Decision Overhead
+26.10-26.60 : J2,5
+26.60-30.00 : IDLE
 
-Total preemptions are:15
+Total preemptions are:1
 
 ResponseTime for Task T1:
-J1,1 : 0.90 J1,2 : 1.20 J1,3 : 1.10 J1,4 : 1.10 J1,5 : 1.10 J1,6 : 0.90 J1,7 : 1.20 J1,8 : 1.10 J1,9 : 1.10 J1,10 : 1.10 J1,11 : 0.90 J1,12 : 1.20 J1,13 : 1.10 J1,14 : 1.10 J1,15 : 1.10 
-Max ResponseTime:1.20 and Min ResponseTime:0.90
-Absolute ResponseTime Jitter:0.30
-Relative ResponseTime Jitter:0.30
-Average ResponseTime:1.08
+J1,1 : 0.80 J1,2 : 0.90 J1,3 : 0.80 J1,4 : 0.80 J1,5 : 0.90 J1,6 : 1.00 
+Max ResponseTime:1.00 and Min ResponseTime:0.80
+Absolute ResponseTime Jitter:0.20
+Relative ResponseTime Jitter:0.20
+Average ResponseTime:0.87
 ResponseTime for Task T2:
-J2,1 : 2.20 J2,2 : 1.50 J2,3 : 1.50 J2,4 : 2.50 J2,5 : 2.20 J2,6 : 1.50 J2,7 : 1.50 J2,8 : 2.50 J2,9 : 2.20 J2,10 : 1.50 J2,11 : 1.50 J2,12 : 2.50 
-Max ResponseTime:2.50 and Min ResponseTime:1.50
-Absolute ResponseTime Jitter:1.00
-Relative ResponseTime Jitter:1.00
-Average ResponseTime:1.92
+J2,1 : 2.30 J2,2 : 1.50 J2,3 : 1.50 J2,4 : 1.50 J2,5 : 2.60 
+Max ResponseTime:2.60 and Min ResponseTime:1.50
+Absolute ResponseTime Jitter:1.10
+Relative ResponseTime Jitter:1.10
+Average ResponseTime:1.88
 ResponseTime for Task T3:
-J3,1 : 13.80 J3,2 : 13.80 J3,3 : 13.80 
-Max ResponseTime:13.80 and Min ResponseTime:13.80
-Absolute ResponseTime Jitter:0.00
-Relative ResponseTime Jitter:0.00
-Average ResponseTime:13.80
+J3,1 : 3.20 J3,2 : 1.70 J3,3 : 1.70 
+Max ResponseTime:3.20 and Min ResponseTime:1.70
+Absolute ResponseTime Jitter:1.50
+Relative ResponseTime Jitter:1.50
+Average ResponseTime:2.20
+ResponseTime for Task T4:
+J4,1 : 4.00 J4,2 : 1.60 
+Max ResponseTime:4.00 and Min ResponseTime:1.60
+Absolute ResponseTime Jitter:2.40
+Relative ResponseTime Jitter:2.40
+Average ResponseTime:2.80
 WaitingTime for Task T1:
-J1,1 : 0.10 J1,2 : 0.40 J1,3 : 0.30 J1,4 : 0.30 J1,5 : 0.30 J1,6 : 0.10 J1,7 : 0.40 J1,8 : 0.30 J1,9 : 0.30 J1,10 : 0.30 J1,11 : 0.10 J1,12 : 0.40 J1,13 : 0.30 J1,14 : 0.30 J1,15 : 0.30 
-Max WaitingTime:0.40 and Min WaitingTime:0.10
-Average WaitingTime:0.28
+J1,1 : 0.10 J1,2 : 0.20 J1,3 : 0.10 J1,4 : 0.10 J1,5 : 0.20 J1,6 : 0.30 
+Max WaitingTime:0.30 and Min WaitingTime:0.10
+Average WaitingTime:0.17
 WaitingTime for Task T2:
-J2,1 : 1.00 J2,2 : 0.30 J2,3 : 0.30 J2,4 : 1.30 J2,5 : 1.00 J2,6 : 0.30 J2,7 : 0.30 J2,8 : 1.30 J2,9 : 1.00 J2,10 : 0.30 J2,11 : 0.30 J2,12 : 1.30 
-Max WaitingTime:1.30 and Min WaitingTime:0.30
-Average WaitingTime:0.73
+J2,1 : 0.90 J2,2 : 0.10 J2,3 : 0.10 J2,4 : 0.10 J2,5 : 1.20 
+Max WaitingTime:1.20 and Min WaitingTime:0.10
+Average WaitingTime:0.48
 WaitingTime for Task T3:
-J3,1 : 8.90 J3,2 : 8.90 J3,3 : 8.90 
-Max WaitingTime:8.90 and Min WaitingTime:8.90
-Average WaitingTime:8.90
+J3,1 : 2.50 J3,2 : 1.00 J3,3 : 1.00 
+Max WaitingTime:2.50 and Min WaitingTime:1.00
+Average WaitingTime:1.50
+WaitingTime for Task T4:
+J4,1 : 3.30 J4,2 : 0.90 
+Max WaitingTime:3.30 and Min WaitingTime:0.90
+Average WaitingTime:2.10

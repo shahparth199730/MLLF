@@ -1,3 +1,6 @@
+/******************************************************************************************************************
+Inphase module will check if there's no job having phase non-zero it will return 0. Else it will try to find the inphase point if any till 2*hp(because we will take minimum of 3*hp and first inPhase+hp).
+******************************************************************************************************************/
 float Inphase(float* phase,float* period, int count,float hp){
   int *x=(int *)malloc(count*sizeof(int));
   float max=0.0;
@@ -18,41 +21,32 @@ float Inphase(float* phase,float* period, int count,float hp){
   }
   float inPhase=-1;
   float  ** array = calloc(sizeof(*array), count);
-  for(int i=0;i<count;i++)
-  {
-  int n_jobs = (3*hp)/period[i];
-  array[i] = calloc(sizeof(**array), n_jobs+1 ); // No. of Jobs in each tasks
-  printf("No of Jobs in Task %dth Task = %d \n",(i+1),n_jobs);
-  array[i][0] = phase[i];
-  for(int j=1;j<=n_jobs;j++)
-  {
-  array[i][j] = array[i][j-1] + period[i];
-  printf("%f\t",array[i][j-1]);
-  }
-  printf("\n");
-  }
-  for( ; x[id] <= (3*hp)/period[id]; x[id]++ ) {
-        float val = array[id][x[id]];
-        printf("1val is :%f\n",val);
-        int print = 1;
-        for( int i = 0; i < count; i++ ) {
-          if(i==id){
-            continue;
-          }
-          printf("For task %d\n",i);
-            while (x[i] <= (3*hp)/period[i] && array[i][x[i]] < val ) {
-              x[i]++;
-              printf("%f ",array[i][x[i]]);
-            }
-            if (array[i][x[i]] != val) print = 0;
-            printf("\n");
-        }
-        if (print==1){
-          printf("VALUE is:%f\n",val);
-          inPhase=val;
-          break;
-        }
+  for(int i=0;i<count;i++){
+    int n_jobs = (2*hp)/period[i];
+    array[i] = calloc(sizeof(**array), n_jobs+1 );
+    array[i][0] = phase[i];
+    for(int j=1;j<=n_jobs;j++){
+      array[i][j] = array[i][j-1] + period[i];
     }
+  }
+  for( ; x[id] <= (2*hp)/period[id]; x[id]++ ) {
+    float val = array[id][x[id]];
+    int print = 1;
+    for( int i = 0; i < count; i++ ) {
+      if(i==id){
+        continue;
+      }
+      while (x[i] <= (2*hp)/period[i] && array[i][x[i]] < val ) {
+        x[i]++;
+      }
+      if (array[i][x[i]] != val) print = 0;
+    }
+    if (print==1){
+      inPhase=val;
+      break;
+    }
+  }
+    /*Freeing the dynamically allocated memory.*/
     free(x);
     free(array);
   return inPhase;

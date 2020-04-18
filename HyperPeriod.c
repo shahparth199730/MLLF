@@ -1,4 +1,6 @@
-/* It will find the hyperperiod by using gcd and lcm functions and as per the formula of finding hyperperiod. */
+/******************************************************************************************************************
+It will find the hyperperiod by using gcd and lcm functions and as per the formula of finding hyperperiod.
+******************************************************************************************************************/
 /* gcd is helping function for finding lcm*/
 float gcd(float a, float b)
 {
@@ -17,10 +19,10 @@ float findlcm(float arr[], int n)
 {
     float ans = arr[0];
     for (int i = 1; i < n; i++){
-        printf("ans:%f befor i:%f\n",ans,arr[i]);
+        //printf("ans:%f befor i:%f\n",ans,arr[i]);
         float temp=(gcd(arr[i], ans));
         ans = (((arr[i] * ans)) / temp);
-        printf("gcd:%f before i:%f\n",temp,arr[i]);
+        //printf("gcd:%f before i:%f\n",temp,arr[i]);
     }
     return ans;
 }

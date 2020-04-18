@@ -1,9 +1,12 @@
-/* List of Header files required*/
+/******************************************************************************************************************
+ List of Header files required, Structure declarations,and function declarations.
+******************************************************************************************************************/
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
 #include<float.h>
 #include<limits.h>
+#include<time.h>
 /* Structure of the task used to handle the periodic taskset*/
 struct task{
   float *phase;
@@ -19,8 +22,10 @@ struct jobs{
   float deadline;
   int visit;
   float execution;
+  float curr_execution;
   float finish;
 };
+/*Structure required to handle the laxity of each job*/
 struct laxity{
   float slack;
   int id;
