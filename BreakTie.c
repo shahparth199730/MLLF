@@ -2,7 +2,7 @@
 
 int BreakTie(int *minLaxityTaskArr,int minLaxityTaskCount,float *execArr,int prevTask)
 {
-    int i,*minExecutionTimeTasks=NULL,minExeTasksCount=0,minLaxityTask=0,minIDTask;
+    int i,*minExecutionTimeTasks=NULL,minExeTasksCount=0,minLaxityTask,minIDTask;
     float minExeTime;
     //continue the currently executing task if minLaxityTaskArr contains cur task
     if(prevTask!=0)
@@ -15,7 +15,9 @@ int BreakTie(int *minLaxityTaskArr,int minLaxityTaskCount,float *execArr,int pre
             }
         }
     }
+    minLaxityTask=0;
     minExeTime=*(execArr+(minLaxityTaskArr[minLaxityTask]-1)*2+1);
+    //among the tasks present which one has the min execution time
     //else, check for the one with min remaining execution time and schedule it
     //find the min execution time among the set of tasks
     for(i=1;i<minLaxityTaskCount;i++)
@@ -38,8 +40,9 @@ int BreakTie(int *minLaxityTaskArr,int minLaxityTaskCount,float *execArr,int pre
             minExeTasksCount++;
         }
     }
-    
+
     //if multiple with min execution times
+
     if(minExeTasksCount>1)
     {
         minIDTask=minExecutionTimeTasks[0];
@@ -49,6 +52,7 @@ int BreakTie(int *minLaxityTaskArr,int minLaxityTaskCount,float *execArr,int pre
             if(minExecutionTimeTasks[i]<minIDTask)
                 minIDTask=minExecutionTimeTasks[i];
         }
+        return minIDTask;
     }
     else
         return minExecutionTimeTasks[0];

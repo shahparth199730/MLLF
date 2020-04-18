@@ -9,7 +9,9 @@ float* FindLaxityOfAvailableTasks(int *activeTasks,struct task *taskSet,int acti
     {
         //find latency for each active task
         float laxity;
+       
         laxity=FindLaxity(taskSet,activeTasks[i],execArr,current);
+        printf("Task ID:%d Laxity:%.2f\n",activeTasks[i],laxity);
         activeTasksLaxity[i]=laxity;
     }
     return activeTasksLaxity;

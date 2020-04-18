@@ -19,15 +19,6 @@ struct task{
   float c;
 };
 
-struct job
-{
-  int id[3];
-  float startTime;
-  float endTime;
-  struct task *associatedTask;
-  float absoluteDeadline;
-};
-
 struct task* AllocateTaskSet(struct task*);
 
 struct task* ReAllocateTaskSet(struct task*,int);
@@ -56,7 +47,7 @@ float Inphase(struct task*,int,float);
 
 float FindScheduleEnd(float,float);
 
-struct job* FindFeasibleSchedule(struct task*,float,int,int*);
+void FindFeasibleSchedule(struct task*,float,int,int*);
 
 int* FindCurrentlyActiveTasks(float*,int,float,int*);
 
@@ -64,7 +55,7 @@ float* CreateExecutionTimeArr(int);
 
 void InitializeExecutionTimeArr(float*,struct task*,int);
 
-int FindNextTaskToBeScheduled(int *,int ,float *,struct task *,float *,int,float*);
+int FindNextTaskToBeScheduled(int *,int ,float,struct task *,float *,int,float*);
 
 float* FindLaxityOfAvailableTasks(int *,struct task *,int ,float ,float *);
 
@@ -82,10 +73,12 @@ float FindNextTaskArrival(struct task*,float*,float,int ,float);
 
 int FindTMIN(struct task *,int,int,float,float,float *);
 
-struct job *AddJobToSchedule(struct job* ,struct task*,int,float,float*,float*,int*,int);
-
 void ResetNextJob(struct task *,float *,int );
 
 float getNextJobArrivalTime(float*,float,int);
+
+void WriteJobToFile(float,float,int,int,bool);
+
+void WriteOverHeadToFile(float,bool);
 
 #endif

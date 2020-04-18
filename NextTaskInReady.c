@@ -1,16 +1,12 @@
 #include"scheduler.h"
 
-int FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float *current,struct task *taskSet,float *execArr,int prevTask,float *minTaskLatency)
+int FindNextTaskToBeScheduled(int *activeTasks,int activeTaskCount,float current,struct task *taskSet,float *execArr,int prevTask,float *minTaskLatency)
 {
     //find latency of all the tasks available
     float *laxityArr=NULL,minLaxity;
     int nextTaskID=0;
     int *minLaxityTaskArr=NULL,minLaxityTaskCount=0,i;
-    laxityArr=FindLaxityOfAvailableTasks(activeTasks,taskSet, activeTaskCount,*current,execArr);
-    for(i=0;i<activeTaskCount;i++)
-    {
-        printf("TAsk ID: %d Laxity: %.2f\n",activeTasks[i],laxityArr[i]);
-    }
+    laxityArr=FindLaxityOfAvailableTasks(activeTasks,taskSet, activeTaskCount,current,execArr);
     minLaxity=FindMinLaxity(laxityArr,activeTaskCount);
     *minTaskLatency=minLaxity;
     for(i=0;i<activeTaskCount;i++)
@@ -73,15 +69,9 @@ float getNextJobArrivalTime(float *execArr,float current,int noOfTasks)
 {
     int i,p=0;
     float nextJobArrival=0;
-    printf("\nnext job aale method ch current hega %.2f\n",current);
     //next job arrival is at
     //1. after the current
     //2. earliert after current
-    printf("next job arrival method\n");
-    for(i=0;i<noOfTasks;i++)
-    {
-        printf("Task ID: %d Arrival Time: %.2f Remaining Exec time: %.2f\n",i+1,(*(execArr+i*2)),(*(execArr+i*2+1)));
-    }
     for(i=0;i<noOfTasks;i++)
     {
         if((*(execArr+i*2))>current && (p==0||(*(execArr+i*2))<nextJobArrival))
@@ -91,6 +81,5 @@ float getNextJobArrivalTime(float *execArr,float current,int noOfTasks)
         }
             
     }
-    printf("next job aale method ne next job arrival kadya %.2f\n",nextJobArrival);
     return nextJobArrival;
 }

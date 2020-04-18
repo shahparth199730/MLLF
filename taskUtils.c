@@ -20,7 +20,8 @@ bool CreateSchedule(char* fileName)
           PrintHyperPeriod(hyperperiod);
           inPhaseTime=Inphase(taskSet, *count,hyperperiod);
           end=FindScheduleEnd(inPhaseTime,hyperperiod);
-          schedule=FindFeasibleSchedule(taskSet,end,noOfTasks,jobCount);
+          printf("First Inphase Time:%.2f te End:%.2f\n",inPhaseTime,end);
+          FindFeasibleSchedule(taskSet,end,noOfTasks,jobCount);
           res=true;
         }
     }

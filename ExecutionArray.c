@@ -18,7 +18,6 @@ void InitializeExecutionTimeArr(float* executionTimeArr,struct task* taskSet,int
         *(executionTimeArr+i*2)=taskSet[i].phase;           
         //*(executionTimeArr+i*2+1)=GetRandomNumber()*taskSet[i].c;
         *(executionTimeArr+i*2+1)=1*taskSet[i].c;
-        printf("Task ID:%d Phase:%.2f Exec Time:%.2f\n",i+1,*(executionTimeArr+i*2),*(executionTimeArr+i*2+1));
     }
 }
 
