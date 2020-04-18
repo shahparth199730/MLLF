@@ -114,8 +114,9 @@ int FindSchedule(struct task t,float end,int count){
     timer=(float)((int)(timer * 100 + .5))/100;
     counter=(float)((int)(counter * 100 + .5))/100;
     fprintf(fptr,"%.2f-%.2f : J%d,%d\n",counter,timer,job[curr_job].job_id,job[curr_job].instance_id);
-    printf("Counter+JobExe=%f and timer:%f and %d\n",counter+job[curr_job].curr_execution,timer,counter+job[curr_job].curr_execution>=timer);
-    if(counter+job[curr_job].curr_execution==timer){
+    printf("Counter+JobExe=%f and timer:%f and %d\n",counter+job[curr_job].curr_execution,timer,counter+job[curr_job].curr_execution<=timer);
+    float epsilon = 0.01f;
+    if(fabs(counter+job[curr_job].curr_execution-timer)<=epsilon){
       printf("MARKING J%d,%d as visited for %d\n",job[curr_job].job_id,job[curr_job].instance_id,curr_job);
       job[curr_job].visit=1;
       job[curr_job].curr_execution=0;
