@@ -62,7 +62,6 @@ int FindSchedule(struct task t,float end,int count){
       fprintf(fptr,"%.2f-%.2f : IDLE\n",tc,counter);
       continue;
     }
-    counter+=0.1;
     l=(struct laxity *)malloc(qend*sizeof(struct laxity));
     int ik=0;
     /*Will caculate the laxity of the jobs in the ready_queue.*/
@@ -86,8 +85,9 @@ int FindSchedule(struct task t,float end,int count){
     arr[1]=0;
     prev_job=curr_job;
     /*As decision point will be there will add 0.1 overhead.*/
-    fprintf(fptr,"%.2f-%.2f : Decision Overhead\n",counter-0.1,counter);
     Scheduler(counter,job,qend,arr,l);
+    counter+=0.1;
+    fprintf(fptr,"%.2f-%.2f : Decision Overhead\n",counter-0.1,counter);
     /*arr[0] will contain the id of job seleccted for execution. arr[1] will contain condition c3: Dmin-slack of curr_job*/
     curr_job=arr[0];
     timer=arr[1];
