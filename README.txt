@@ -1,4 +1,4 @@
-[1] Submitted by: Group6 [Dilpreet Kaur,Kharat Ajay Dilip,Pallavi Varshney,Parth Shah]
+[1] Submitted by: Group6 [Ajay Kharat-2019H1030011G,Dilpreet Kaur-2019H1030907G,Pallavi Varshney-2019H1030029G,Parth Shah-2019H1030563G]
 
 [2] Referred: Sung-Heun Oh and Seung-Min Yang, "A Modified Least-Laxity-First scheduling algorithm for real-time tasks," Proceedings Fifth International Conference on Real-Time Computing Systems and Applications (Cat. No.98EX236), Hiroshima, Japan, 1998, pp. 31-36.
 

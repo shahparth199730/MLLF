@@ -22,7 +22,8 @@ float findlcm(float arr[], int n)
         //printf("ans:%f befor i:%f\n",ans,arr[i]);
         float temp=(gcd(arr[i], ans));
         ans = (((arr[i] * ans)) / temp);
-        //printf("gcd:%f before i:%f\n",temp,arr[i]);
+        ans=(float)((int)(ans * 10 + .5))/10;
+        //printf("gcd:%f before i:%f\n",ans,arr[i]);
     }
     return ans;
 }

@@ -32,7 +32,7 @@ void Handler(char *filename){
   t.c=(float *)malloc(count*sizeof(float));
   /* Reading the taskset from the given file.*/
   while (fscanf(fp2, "%f,%f,%f,%f\n",&t.phase[i],&t.p[i], &t.c[i], &t.d[i])==4) {
-    printf("%f,%f,%.1f,%f\n", t.phase[i],t.p[i], t.c[i], t.d[i]);
+    //printf("%f,%f,%.1f,%f\n", t.phase[i],t.p[i], t.c[i], t.d[i]);
     i++;
   }
   fclose( fp2 );
@@ -47,7 +47,7 @@ void Handler(char *filename){
   }
   /*Finding the hyperperiod.*/
   hp=HyperPeriod(t.p,count);
-  printf("hp is: %f\n",hp);
+  //printf("hp is: %f\n",hp);
   /*finding the inphase point for the taskset.*/
   float fip=Inphase(t.phase,t.p,count,hp);
   float end=0;

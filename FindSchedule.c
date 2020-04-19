@@ -53,7 +53,7 @@ int FindSchedule(struct task t,float end,int count){
       if(id_tracker>=k) break;
       ready_queue[qend++]=i;
       id_tracker++;
-      printf("READY QUEUE:%d\n",ready_queue[qend-1]);
+      //printf("READY QUEUE:%d\n",ready_queue[qend-1]);
     }
     /*If ready_queue is empty keep the cpu IDLE.*/
     if(0==qend){
@@ -102,10 +102,10 @@ int FindSchedule(struct task t,float end,int count){
     //if(timer<counter) timer=-1;
     /*Conditon c1: current job completing the execution.*/
     float c1=job[curr_job].curr_execution;
-    printf("Con c1:%f\n",c1);
+    //printf("Con c1:%f\n",c1);
     /*Next Job arrival*/
     float c2=job[id_tracker].arrival-counter;
-    printf("Con c2:%f\n",c2);
+    //printf("Con c2:%f\n",c2);
     float c;
     if(id_tracker<k){
       c=c1>c2?c2:c1;
@@ -113,21 +113,21 @@ int FindSchedule(struct task t,float end,int count){
     else{
       c=c1;
     }
-    printf("Con cc:%f\n",c);
-    if(c3>c||c3==-1){
+  //  printf("Con cc:%f\n",c);
+    if(c3>c||c3<0){
       timer=counter+c;
     }
     else{
       timer=counter+c3;
     }
-    printf("Timer:%f\n",timer);
+  //  printf("Timer:%f\n",timer);
     timer=(float)((int)(timer * 100 + .5))/100;
     counter=(float)((int)(counter * 100 + .5))/100;
     fprintf(fptr,"%.2f-%.2f : J%d,%d\n",counter,timer,job[curr_job].job_id,job[curr_job].instance_id);
-    printf("Counter+JobExe=%f and timer:%f and %d\n",counter+job[curr_job].curr_execution,timer,counter+job[curr_job].curr_execution<=timer);
+    //printf("Counter+JobExe=%f and timer:%f and %d\n",counter+job[curr_job].curr_execution,timer,counter+job[curr_job].curr_execution<=timer);
     float epsilon = 0.01f;
     if(fabs(counter+job[curr_job].curr_execution-timer)<=epsilon){
-      printf("MARKING J%d,%d as visited for %d\n",job[curr_job].job_id,job[curr_job].instance_id,curr_job);
+      //printf("MARKING J%d,%d as visited for %d\n",job[curr_job].job_id,job[curr_job].instance_id,curr_job);
       job[curr_job].visit=1;
       job[curr_job].curr_execution=0;
       job[curr_job].finish=timer;
@@ -156,9 +156,9 @@ int FindSchedule(struct task t,float end,int count){
     counter+=(timer-counter);
     counter=(float)((int)(counter * 100 + .5))/100;
     timer=0;
-    for(int i=0;i<qend;i++){
-      printf("ReadQueue:%d\n",ready_queue[i]);
-    }
+    // for(int i=0;i<qend;i++){
+    //   printf("ReadQueue:%d\n",ready_queue[i]);
+    // }
   }
   /*After completing the schedule will check if there's any remaining time. If so we will display that as idle time.*/
   if(counter!=end){
