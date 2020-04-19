@@ -90,17 +90,22 @@ int FindSchedule(struct task t,float end,int count){
     fprintf(fptr,"%.2f-%.2f : Decision Overhead\n",counter-0.1,counter);
     /*arr[0] will contain the id of job seleccted for execution. arr[1] will contain condition c3: Dmin-slack of curr_job*/
     curr_job=arr[0];
-    timer=arr[1];
+    float c3=arr[1];
+    //timer-=0.1;
     /*Will check if currently selected job is not same as previously executing job(seeing if its completed will ignore in that case.) then will add 0.2 overhead.*/
     if(prev_job!=-1&&curr_job!=prev_job&&job[prev_job].visit!=1){
       preemption++;
       counter+=0.2;
+      // timer-=0.2;
       fprintf(fptr,"%.2f-%.2f : Preemption Overhead\n",counter-0.2,counter);
     }
+    //if(timer<counter) timer=-1;
     /*Conditon c1: current job completing the execution.*/
-    float c1=counter+job[curr_job].curr_execution;
+    float c1=job[curr_job].curr_execution;
+    printf("Con c1:%f\n",c1);
     /*Next Job arrival*/
-    float c2=job[id_tracker].arrival;
+    float c2=job[id_tracker].arrival-counter;
+    printf("Con c2:%f\n",c2);
     float c;
     if(id_tracker<k){
       c=c1>c2?c2:c1;
@@ -108,9 +113,14 @@ int FindSchedule(struct task t,float end,int count){
     else{
       c=c1;
     }
-    if(timer>c||timer==-1){
-      timer=c;
+    printf("Con cc:%f\n",c);
+    if(c3>c||c3==-1){
+      timer=counter+c;
     }
+    else{
+      timer=counter+c3;
+    }
+    printf("Timer:%f\n",timer);
     timer=(float)((int)(timer * 100 + .5))/100;
     counter=(float)((int)(counter * 100 + .5))/100;
     fprintf(fptr,"%.2f-%.2f : J%d,%d\n",counter,timer,job[curr_job].job_id,job[curr_job].instance_id);
