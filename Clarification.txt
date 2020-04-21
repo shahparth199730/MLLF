@@ -1,0 +1,21 @@
+1. For all the questions, 
+(A) The task set consists of only periodic tasks. 
+(B) Number of tasks in the task set is also an input in input file.
+(C) You need to calculate all the parameters similar to Assignment 2. 
+(D) For all the tasks assume deadline is same as period [but maintain 2 separate member variables for period and deadline].
+(E) You need to find actual execution time as 50% to 100% of WCET.
+(F) Tasks can be out of phase. You should schedule the task set from 0 to min of (3*hyper-period, first in-phase time + hyper period)
+
+2. Add pre-emption overhead as 0.2 units and decision making overhead as 0.1 units.
+
+3. For ccEDF and ccRM, the frequency/voltage level calculation overhead is 0.05 units.
+
+4. ccEDF and ccRM should take an input file specifying the frequencies and voltages the processor is supporting [different processors will have different voltage and frequency support] [say 40% of Max to MAX]. Assuming the IDLE period is executed with MIN frequency, in addition to other parameters you need to calculate dynamic energy consumption of your schedule as well.
+
+5. EDF and RM with Non-preemptive jobs and self suspension should display the offline phase to guarantee the schedulability. There should be a file which specifies what all [start time and end time] are the non-preemptive portions of each job [only the jobs with non-preemptive portions will have entry in this file]. There should be a file spefifying self suspension time [after how much of execution - how long] of each job [only the jobs with self suspension will have entry in this file]. There can be multiple entries in corresponding files if there are multiple non-preemptive portion / self-suspension.
+   
+6. For EDFRCS, extension time calculation overhead is 0.05 units
+
+7. For all algorithms you are allowed to call the scheduler only at decision points [arrival/departure/slack change ....]. [You are not allowed to call the scheduler at each time unit.
+
+     

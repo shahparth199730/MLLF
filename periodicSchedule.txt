@@ -1,0 +1,70 @@
+0.00-0.10 : Decision Overhead
+0.10-0.80 : J1,1
+0.80-0.90 : Decision Overhead
+0.90-2.30 : J2,1
+2.30-2.40 : Decision Overhead
+2.40-4.00 : J3,1
+4.00-4.10 : Decision Overhead
+4.10-4.30 : Preemption Overhead
+4.30-5.00 : J1,2
+5.00-5.10 : Decision Overhead
+5.10-6.50 : J2,2
+6.50-6.60 : Decision Overhead
+6.60-8.00 : J3,1
+8.00-8.10 : Decision Overhead
+8.10-8.30 : Preemption Overhead
+8.30-9.00 : J1,3
+9.00-9.10 : Decision Overhead
+9.10-10.00 : J3,1
+10.00-10.10 : Decision Overhead
+10.10-10.30 : Preemption Overhead
+10.30-11.70 : J2,3
+11.70-11.80 : Decision Overhead
+11.80-12.00 : J3,1
+12.00-12.10 : Decision Overhead
+12.10-12.30 : Preemption Overhead
+12.30-13.00 : J1,4
+13.00-13.10 : Decision Overhead
+13.10-13.90 : J3,1
+13.90-15.00 : IDLE
+15.00-15.10 : Decision Overhead
+15.10-16.00 : J2,4
+16.00-16.10 : Decision Overhead
+16.10-16.30 : Preemption Overhead
+16.30-17.00 : J1,5
+17.00-17.10 : Decision Overhead
+17.10-17.60 : J2,4
+17.60-20.00 : IDLE
+
+Total preemptions are:5
+
+ResponseTime for Task T1:
+J1,1 : 0.80 J1,2 : 1.00 J1,3 : 1.00 J1,4 : 1.00 J1,5 : 1.00 
+Max ResponseTime:1.00 and Min ResponseTime:0.80
+Absolute ResponseTime Jitter:0.20
+Relative ResponseTime Jitter:0.20
+Average ResponseTime:0.96
+ResponseTime for Task T2:
+J2,1 : 2.30 J2,2 : 1.50 J2,3 : 1.70 J2,4 : 2.60 
+Max ResponseTime:2.60 and Min ResponseTime:1.50
+Absolute ResponseTime Jitter:1.10
+Relative ResponseTime Jitter:0.90
+Average ResponseTime:2.03
+ResponseTime for Task T3:
+J3,1 : 13.90 
+Max ResponseTime:13.90 and Min ResponseTime:13.90
+Absolute ResponseTime Jitter:0.00
+Relative ResponseTime Jitter:0.00
+Average ResponseTime:13.90
+WaitingTime for Task T1:
+J1,1 : 0.10 J1,2 : 0.30 J1,3 : 0.30 J1,4 : 0.30 J1,5 : 0.30 
+Max WaitingTime:0.30 and Min WaitingTime:0.10
+Average WaitingTime:0.26
+WaitingTime for Task T2:
+J2,1 : 0.90 J2,2 : 0.10 J2,3 : 0.30 J2,4 : 1.20 
+Max WaitingTime:1.20 and Min WaitingTime:0.10
+Average WaitingTime:0.63
+WaitingTime for Task T3:
+J3,1 : 9.00 
+Max WaitingTime:9.00 and Min WaitingTime:9.00
+Average WaitingTime:9.00
